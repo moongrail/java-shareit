@@ -92,7 +92,7 @@ public class ItemStorageImpl implements ItemStorage {
 
     @Override
     public List<Item> findByText(String text) {
-        if (text.isBlank() || text.isEmpty()){
+        if (text.isBlank() || text.isEmpty()) {
             return new ArrayList<>();
         }
 
