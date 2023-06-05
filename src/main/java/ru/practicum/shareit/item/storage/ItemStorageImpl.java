@@ -37,7 +37,7 @@ public class ItemStorageImpl implements ItemStorage {
 
     @Override
     public Optional<Item> patch(Long id, ItemDto itemDto) {
-        Optional<Item> optionalItem = findById(id);
+        Optional<Item> optionalItem = findById(itemDto.getId());
 
         if (optionalItem.isPresent()) {
             Item item = optionalItem.get();
@@ -54,8 +54,9 @@ public class ItemStorageImpl implements ItemStorage {
 
             items.put(item.getId(), item);
 
-            return Optional.of(findById(item.getId()).get());
+            return Optional.of(item);
         }
+
         return Optional.empty();
     }
 
@@ -91,12 +92,18 @@ public class ItemStorageImpl implements ItemStorage {
 
     @Override
     public List<Item> findByText(String text) {
+        if (text.isBlank() || text.isEmpty()){
+            return new ArrayList<>();
+        }
+
         List<Item> foundItems = new ArrayList<>();
         for (Item item : items.values()) {
-            if (item.getName().contains(text) || item.getDescription().contains(text)) {
+            if (item.isAvailable() && (item.getName().toLowerCase().contains(text.toLowerCase())
+                    || item.getDescription().toLowerCase().contains(text.toLowerCase()))) {
                 foundItems.add(item);
             }
         }
+
         return foundItems;
     }
 }

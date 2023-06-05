@@ -6,15 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
 
-/**
- * TODO Sprint add-controllers.
- */
 @RestController
 @RequestMapping(path = "/users")
 @RequiredArgsConstructor
@@ -51,10 +47,6 @@ public class UserController {
     @PatchMapping(path = "/{userId}")
     public ResponseEntity<UserDto> updateUser(@PathVariable("userId") Long userId,
                                               @RequestBody UserDto userDto) {
-//        if (bindingResult.hasErrors()){
-//            return ResponseEntity.badRequest()
-//                    .body(userDto);
-//        }
 
         return ResponseEntity.ok()
                .contentType(MediaType.APPLICATION_JSON)
