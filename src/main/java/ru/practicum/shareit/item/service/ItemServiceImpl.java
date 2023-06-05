@@ -37,10 +37,6 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto patch(Long itemId, Long userId, ItemDto itemDto) {
-        if (userId == null || userId == null) {
-            throw new ItemParameterException("Заголовки не найдены");
-        }
-
         if (!itemStorage.findById(itemId).get().getOwner().equals(userId)) {
             throw new ItemNotFoundException("Вещь не найдена у Юзера");
         }
