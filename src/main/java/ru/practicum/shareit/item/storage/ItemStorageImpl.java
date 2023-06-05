@@ -30,9 +30,13 @@ public class ItemStorageImpl implements ItemStorage {
         item.setOwner(userId);
         item.setId(index);
         items.put(item.getId(), item);
-        index++;
+        increasedId();
 
         return Optional.of(item);
+    }
+
+    private static void increasedId() {
+        index++;
     }
 
     @Override

@@ -28,9 +28,13 @@ public class UserStorageImpl implements UserStorage {
 
         users.put(userDto.getId(), UserMapperDto.fromUserDto(userDto.getId(), userDto));
         emails.add(userDto.getEmail());
-        index++;
+        increasedId();
 
         return Optional.of(UserMapperDto.fromUserDto(userDto.getId(), userDto));
+    }
+
+    private static void increasedId() {
+        index++;
     }
 
     private void checkEmailUnique(UserDto userDto) {
