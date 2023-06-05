@@ -24,6 +24,7 @@ public class UserController {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(userService.findById(userId));
     }
+
     @GetMapping()
     public ResponseEntity<List<UserDto>> getAllUser() {
         return ResponseEntity
@@ -34,9 +35,9 @@ public class UserController {
 
     @PostMapping()
     public ResponseEntity<UserDto> createUser(@RequestBody @Valid UserDto userDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()){
-           return ResponseEntity.badRequest()
-                   .body(userDto);
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest()
+                    .body(userDto);
         }
 
         return ResponseEntity.ok()
@@ -49,8 +50,8 @@ public class UserController {
                                               @RequestBody UserDto userDto) {
 
         return ResponseEntity.ok()
-               .contentType(MediaType.APPLICATION_JSON)
-               .body(userService.update(userId, userDto));
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(userService.update(userId, userDto));
     }
 
     @DeleteMapping(path = "/{userId}")

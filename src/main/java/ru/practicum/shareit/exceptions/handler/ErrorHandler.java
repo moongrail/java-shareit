@@ -15,39 +15,39 @@ public class ErrorHandler {
     @ExceptionHandler(ItemNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
-    public ErrorResponse  handleItemNotFoundException(ItemNotFoundException ex) {
+    public ErrorResponse handleItemNotFoundException(ItemNotFoundException ex) {
         return new ErrorResponse(ex.getMessage());
     }
 
     @ExceptionHandler(ItemNotHeaderUserId.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorResponse  handleItemNotFoundException(ItemNotHeaderUserId ex) {
+    public ErrorResponse handleItemNotFoundException(ItemNotHeaderUserId ex) {
         return new ErrorResponse(ex.getMessage());
     }
 
     @ExceptionHandler(ItemParameterException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorResponse  handleItemParameterException(ItemParameterException ex) {
+    public ErrorResponse handleItemParameterException(ItemParameterException ex) {
         return new ErrorResponse(ex.getMessage());
     }
 
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse  handleUserNotFoundException(UserNotFoundException ex) {
+    public ErrorResponse handleUserNotFoundException(UserNotFoundException ex) {
         return new ErrorResponse(ex.getMessage());
     }
 
     @ExceptionHandler(UserUniqueEmailException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse  handleUserUniqueEmailException(UserUniqueEmailException ex) {
+    public ErrorResponse handleUserUniqueEmailException(UserUniqueEmailException ex) {
         return new ErrorResponse(ex.getMessage());
     }
 
     @ExceptionHandler(UserParameterException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse  handleUserParameterException(UserParameterException ex) {
+    public ErrorResponse handleUserParameterException(UserParameterException ex) {
         return new ErrorResponse(ex.getMessage());
     }
 }

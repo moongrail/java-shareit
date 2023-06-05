@@ -13,6 +13,7 @@ public class UserMapperDto {
                 .email(user.getEmail())
                 .build();
     }
+
     public static User fromUserDto(Long id, UserDto userDto) {
         return User.builder()
                 .id(id)
