@@ -9,6 +9,6 @@ public interface ItemService {
     ItemDto patch(Long itemId, Long userId, ItemDto itemDto);
     ItemDto findById(Long id);
     void delete(Long id);
-    List<ItemDto> findAll();
+    List<ItemDto> findAllItemByUserId(Long userId);
     List<ItemDto> findByText(String text);
 }

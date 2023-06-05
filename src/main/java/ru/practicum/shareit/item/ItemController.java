@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
@@ -22,10 +21,10 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping
-    public ResponseEntity<List<ItemDto>> getAllItems() {
+    public ResponseEntity<List<ItemDto>> getAllItems(@RequestHeader(value = "X-Sharer-User-Id") Long userId) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(itemService.findAll());
+                .body(itemService.findAllItemByUserId(userId));
     }
 
     @GetMapping("/{itemId}")

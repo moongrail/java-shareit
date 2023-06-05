@@ -74,8 +74,19 @@ public class ItemStorageImpl implements ItemStorage {
     }
 
     @Override
-    public List<Item> findAll() {
-        return new ArrayList<>(items.values());
+    public List<Item> findAllItemByUserId(Long userId) {
+        if (userStorage.findById(userId).isEmpty()) {
+            throw new UserNotFoundException("Пользователь не найден");
+        }
+
+        List<Item> foundItems = new ArrayList<>();
+        for (Item item : items.values()) {
+            if (item.getOwner().equals(userId)) {
+                foundItems.add(item);
+            }
+        }
+
+        return foundItems;
     }
 
     @Override

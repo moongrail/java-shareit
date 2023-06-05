@@ -73,8 +73,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> findAll() {
-        return ItemMapperDto.toListItemDto(itemStorage.findAll());
+    public List<ItemDto> findAllItemByUserId(Long userId) {
+        return ItemMapperDto.toListItemDto(itemStorage.findAllItemByUserId(userId));
     }
 
     @Override
