@@ -18,7 +18,7 @@ import java.util.*;
 public class ItemStorageImpl implements ItemStorage {
     private final UserStorage userStorage;
     private static final Map<Long, Item> items = new HashMap<>();
-    private static Long index = 0L;
+    private static Long index = 1L;
 
     @Override
     public Optional<Item> save(Long userId, ItemDto itemDto) {
@@ -28,8 +28,10 @@ public class ItemStorageImpl implements ItemStorage {
 
         Item item = ItemMapperDto.fromItemDto(itemDto);
         item.setOwner(userId);
-        item.setId(++index);
+        item.setId(index);
         items.put(item.getId(), item);
+        index++;
+
         return Optional.of(item);
     }
 

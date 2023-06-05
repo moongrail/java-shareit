@@ -74,6 +74,7 @@ public class UserStorageImpl implements UserStorage {
             throw new UserNotFoundException("Пользователь не найден");
         }
 
+        emails.remove(users.get(id).getEmail());
         users.remove(id);
     }
 
