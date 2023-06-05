@@ -23,7 +23,7 @@ public class ItemDto {
     @NotNull
     private String description;
     @NotNull
-    private boolean available;
+    private Boolean available;
     private Long owner;
     private ItemRequest request;
 }

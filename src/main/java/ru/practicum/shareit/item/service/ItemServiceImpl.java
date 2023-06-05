@@ -41,6 +41,10 @@ public class ItemServiceImpl implements ItemService {
             throw new ItemParameterException("Заголовки не найдены");
         }
 
+        if (!itemStorage.findById(itemId).get().getOwner().equals(userId)){
+            throw new ItemNotFoundException("Вещь не найдена у Юзера");
+        }
+
         itemDto.setId(itemId);
 
         Optional<Item> patch = itemStorage.patch(userId, itemDto);

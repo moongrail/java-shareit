@@ -17,7 +17,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class ItemStorageImpl implements ItemStorage {
     private final UserStorage userStorage;
-    private static final Map<Long, Item> items = new HashMap<>();
+    private final Map<Long, Item> items = new HashMap<>();
     private static Long index = 1L;
 
     @Override
@@ -38,20 +38,23 @@ public class ItemStorageImpl implements ItemStorage {
     @Override
     public Optional<Item> patch(Long id, ItemDto itemDto) {
         Optional<Item> optionalItem = findById(id);
+
         if (optionalItem.isPresent()) {
             Item item = optionalItem.get();
+
             if (itemDto.getName() != null) {
                 item.setName(itemDto.getName());
             }
             if (itemDto.getDescription() != null) {
                 item.setDescription(itemDto.getDescription());
             }
-            if (itemDto.isAvailable()) {
-                item.setAvailable(itemDto.isAvailable());
+            if (itemDto.getAvailable() != null) {
+                item.setAvailable(itemDto.getAvailable());
             }
+
             items.put(item.getId(), item);
 
-            return Optional.of(item);
+            return Optional.of(findById(item.getId()).get());
         }
         return Optional.empty();
     }

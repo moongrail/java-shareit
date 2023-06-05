@@ -53,13 +53,7 @@ public class ItemController {
     @PatchMapping("/{itemId}")
     public ResponseEntity<ItemDto> updateItem(@RequestHeader(value = "X-Sharer-User-Id") Long userId,
                                               @PathVariable Long itemId,
-                                              @RequestBody @Valid ItemDto itemDto,
-                                              BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(itemDto);
-        }
+                                              @RequestBody ItemDto itemDto) {
 
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)

@@ -12,6 +12,7 @@ public class ItemMapperDto {
                 .name(item.getName())
                 .description(item.getDescription())
                 .available(item.isAvailable())
+                .owner(item.getOwner())
                 .request(item.getRequest())
                 .build();
     }
@@ -21,7 +22,8 @@ public class ItemMapperDto {
                 .id(itemDto.getId())
                 .name(itemDto.getName())
                 .description(itemDto.getDescription())
-                .available(itemDto.isAvailable())
+                .available(itemDto.getAvailable())
+                .owner(itemDto.getOwner())
                 .request(itemDto.getRequest())
                 .build();
     }
