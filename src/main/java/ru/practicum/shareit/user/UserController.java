@@ -18,7 +18,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping(path = "/{userId}")
-    public ResponseEntity<UserDto> getUser(@PathVariable("userId") Long userId) {
+    public ResponseEntity<UserDto> getUser(@PathVariable Long userId) {
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @PatchMapping(path = "/{userId}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable("userId") Long userId,
+    public ResponseEntity<UserDto> updateUser(@PathVariable Long userId,
                                               @RequestBody UserDto userDto) {
 
         return ResponseEntity.ok()
@@ -55,8 +55,8 @@ public class UserController {
     }
 
     @DeleteMapping(path = "/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable("userId") Long id) {
-        userService.delete(id);
+    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
+        userService.delete(userId);
 
         return ResponseEntity
                 .noContent()

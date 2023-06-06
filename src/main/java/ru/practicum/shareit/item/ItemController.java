@@ -15,10 +15,11 @@ import java.util.List;
 @RequestMapping("/items")
 @RequiredArgsConstructor
 public class ItemController {
+    private static final String HEADER_USER_ID = "X-Sharer-User-Id";
     private final ItemService itemService;
 
     @GetMapping
-    public ResponseEntity<List<ItemDto>> getAllItems(@RequestHeader(value = "X-Sharer-User-Id") Long userId) {
+    public ResponseEntity<List<ItemDto>> getAllItems(@RequestHeader(value = HEADER_USER_ID) Long userId) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(itemService.findAllItemByUserId(userId));
@@ -32,7 +33,7 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<ItemDto> addItem(@RequestHeader(value = "X-Sharer-User-Id") Long userId,
+    public ResponseEntity<ItemDto> addItem(@RequestHeader(value = HEADER_USER_ID) Long userId,
                                            @RequestBody @Valid ItemDto itemDto,
                                            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -47,7 +48,7 @@ public class ItemController {
     }
 
     @PatchMapping("/{itemId}")
-    public ResponseEntity<ItemDto> updateItem(@RequestHeader(value = "X-Sharer-User-Id") Long userId,
+    public ResponseEntity<ItemDto> updateItem(@RequestHeader(value = HEADER_USER_ID) Long userId,
                                               @PathVariable Long itemId,
                                               @RequestBody ItemDto itemDto) {
 
