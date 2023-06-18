@@ -9,6 +9,7 @@ import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 /**
  * TODO Sprint add-bookings.
@@ -25,10 +26,10 @@ public class Booking {
     private Long id;
 
     @Column(name = "start_date", nullable = false)
-    private Timestamp start;
+    private LocalDateTime start;
 
     @Column(name = "end_date", nullable = false)
-    private Timestamp end;
+    private LocalDateTime end;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id", nullable = false)

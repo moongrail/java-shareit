@@ -15,7 +15,7 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repositories.UserRepository;
 
 import javax.transaction.Transactional;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static ru.practicum.shareit.booking.dto.BookingMapperDto.fromBookingDto;
@@ -45,11 +45,11 @@ public class BookingServiceImpl implements BookingService {
     public BookingDto create(Long userId, BookingCreateDto bookingCreateDto) {
         Item item = itemRepository
                 .findById(bookingCreateDto.getItemId())
-                .orElseThrow(()-> new ItemNotFoundException("Такой предмет не существует"));
+                .orElseThrow(() -> new ItemNotFoundException("Такой предмет не существует"));
 
         User booker = userRepository
                 .findById(userId)
-                .orElseThrow(()-> new UserNotFoundException("Пользователь не найден"));
+                .orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
 
         if (Boolean.FALSE.equals(item.isAvailable())) {
             throw new BookingParameterException("Предмет недоступен");
@@ -72,51 +72,45 @@ public class BookingServiceImpl implements BookingService {
                 .status(BookingStatus.WAITING)
                 .build());
 
-        Booking savedBooking = bookingRepository.save(booking);
-
-        return toBookingDto(savedBooking);
+        return toBookingDto(bookingRepository.save(booking));
     }
 
     private boolean checkItemHaveUser(Long userId, BookingCreateDto bookingCreateDto) {
-        return  itemRepository
+        return itemRepository
                 .findById(bookingCreateDto.getItemId())
                 .get()
                 .getOwner()
                 .equals(userId);
     }
 
-    private boolean checkTimestampBooking(Timestamp start, Timestamp end) {
-        boolean startAfterEnd = start.after(end);
-        boolean timestampsNotNull = start != null && end != null;
-        return startAfterEnd && timestampsNotNull;
+    private boolean checkTimestampBooking(LocalDateTime start, LocalDateTime end) {
+        boolean startAfterEnd = start.isAfter(end);
+        boolean timestampsNotNull = start == null || end == null;
+        boolean equalsTime = start.equals(end);
+        return startAfterEnd || timestampsNotNull || equalsTime;
     }
 
     @Override
     @Transactional
-    public BookingDto patch(Long bookingId, Long userId, BookingDto bookingDto) {
-        Booking booking = bookingRepository.findById(bookingId)
+    public BookingDto patch(Long bookingId, Long userId, Boolean approved) {
+        Booking booking = bookingRepository.getBookingFull(bookingId)
                 .orElseThrow(() -> new BookingNotFoundException("Бронь не найдена"));
 
-        if (!booking.getBooker().getId().equals(userId)) {
-            throw new BookingAuthException("Пользователь не автор брони");
+        if (!booking.getStatus().equals(BookingStatus.WAITING)) {
+            throw new BookingParameterException("Бронь не находится в состоянии ожидания");
         }
 
-        if (!checkTimestampBooking(bookingDto.getStart(),bookingDto.getEnd())) {
-            throw new BookingTimestampException("Ошибка в датах брони");
+        if (booking.getBooker().getId().equals(userId)) {
+            throw new BookingNotFoundException("Не тот юзер. Нельзя редактировать бронь");
         }
 
-        booking.setStart(bookingDto.getStart());
-        booking.setEnd(bookingDto.getEnd());
-
-        if (bookingDto.getStatus() != null) {
-            if (bookingDto.getStatus() == BookingStatus.APPROVED && !booking.getItem().isAvailable()) {
-                throw new ItemParameterException("Вещь недоступна");
-            }
-            booking.setStatus(bookingDto.getStatus());
+        if (!booking.getItem().getOwner().equals(userId)) {
+            throw new BookingNotFoundException("У пользователя нет прав на редактирование брони");
         }
 
-        Booking savedBooking = bookingRepository.save(booking);
-        return toBookingDto(savedBooking);
+        booking.setStatus(approved ? BookingStatus.APPROVED : BookingStatus.REJECTED);
+
+        return toBookingDto(bookingRepository.save(booking));
     }
 
     @Override

@@ -48,20 +48,17 @@ public class BookingController {
     @PatchMapping("/{bookingId}")
     public ResponseEntity<BookingDto> patchBooking(@PathVariable Long bookingId,
                                                    @RequestHeader(name = HEADER_USER_ID) Long userId,
-                                                   @RequestParam(name = "approved", required = false) Boolean approved,
-                                                   @RequestBody BookingDto bookingDto) {
-        if (approved != null && approved) {
-            bookingDto.setStatus(BookingStatus.APPROVED);
-        }
+                                                   @RequestParam(name = "approved", required = false) Boolean approved) {
 
-        BookingDto updatedBookingDto = bookingService.patch(bookingId, userId, bookingDto);
+        BookingDto updatedBookingDto = bookingService.patch(bookingId, userId, approved);
+
         return ResponseEntity.ok(updatedBookingDto);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteBookingById(@PathVariable Long id) {
         bookingService.deleteBookingById(id);
-        return ResponseEntity.ok("Booking with id " + id + " has been deleted successfully");
+        return ResponseEntity.ok("Удален Booking с id " + id);
     }
 }
 

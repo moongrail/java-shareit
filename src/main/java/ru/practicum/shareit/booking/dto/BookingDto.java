@@ -10,6 +10,7 @@ import ru.practicum.shareit.user.model.User;
 
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 /**
  * TODO Sprint add-bookings.
@@ -22,10 +23,10 @@ public class BookingDto {
     private Long id;
 
     @NotNull
-    private Timestamp start;
+    private LocalDateTime start;
 
     @NotNull
-    private Timestamp end;
+    private LocalDateTime end;
 
     private Item item;
 

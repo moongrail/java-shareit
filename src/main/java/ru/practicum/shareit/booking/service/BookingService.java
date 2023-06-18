@@ -8,7 +8,7 @@ public interface BookingService {
 
     BookingDto create(Long userId, BookingCreateDto bookingCreateDto);
 
-    BookingDto patch(Long bookingId, Long userId, BookingDto bookingDto);
+    BookingDto patch(Long bookingId, Long userId,Boolean approved);
 
     void deleteBookingById(Long id);
 }
