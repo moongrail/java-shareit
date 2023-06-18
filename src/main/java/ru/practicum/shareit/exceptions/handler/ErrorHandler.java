@@ -5,11 +5,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.practicum.shareit.booking.BookingController;
 import ru.practicum.shareit.exceptions.*;
 import ru.practicum.shareit.item.ItemController;
 import ru.practicum.shareit.user.UserController;
 
-@RestControllerAdvice(basePackageClasses = {UserController.class, ItemController.class})
+@RestControllerAdvice(basePackageClasses = {UserController.class, ItemController.class, BookingController.class})
 public class ErrorHandler {
 
     @ExceptionHandler(ItemNotFoundException.class)
@@ -22,7 +23,7 @@ public class ErrorHandler {
     @ExceptionHandler(ItemNotHeaderUserId.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public ErrorResponse handleItemNotFoundException(ItemNotHeaderUserId ex) {
+    public ErrorResponse handleItemNotHeaderUserId(ItemNotHeaderUserId ex) {
         return new ErrorResponse(ex.getMessage());
     }
 
@@ -48,6 +49,28 @@ public class ErrorHandler {
     @ExceptionHandler(UserParameterException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleUserParameterException(UserParameterException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
+
+    @ExceptionHandler(BookingNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleBookingNotFoundException(BookingNotFoundException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
+
+    @ExceptionHandler(BookingTimestampException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleBookingTimestampException(BookingTimestampException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
+    @ExceptionHandler(BookingAuthException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handleBookingAuthException(BookingAuthException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
+    @ExceptionHandler(BookingParameterException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleBookingParameterException(BookingParameterException ex) {
         return new ErrorResponse(ex.getMessage());
     }
 }
