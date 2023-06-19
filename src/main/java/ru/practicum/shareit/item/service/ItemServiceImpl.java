@@ -171,9 +171,9 @@ public class ItemServiceImpl implements ItemService {
                 comment = commentRepository.save(comment);
                 return CommentMapperDto.toCommentResponseDto(comment);
             }
-            throw new UserParameterException("Booking bad status");
+            throw new UserParameterException("Вещь не найдена у Юзера");
         } else {
-            throw new UserParameterException("This User not Booker for this Item");
+            throw new UserParameterException("Вещь не найдена у Юзера");
         }
     }
 }
