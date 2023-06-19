@@ -8,6 +8,7 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapperDto;
 import ru.practicum.shareit.exceptions.ItemNotFoundException;
 import ru.practicum.shareit.exceptions.UserNotFoundException;
+import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserStorage;
 
 import java.util.*;
@@ -22,12 +23,10 @@ public class ItemStorageImpl implements ItemStorage {
 
     @Override
     public Optional<Item> save(Long userId, ItemDto itemDto) {
-        if (userStorage.findById(userId).isEmpty()) {
-            throw new UserNotFoundException("Пользователь не найден");
-        }
+        User user = userStorage.findById(userId).orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
 
         Item item = ItemMapperDto.fromItemDto(itemDto);
-        item.setOwner(userId);
+        item.setOwner(user);
         item.setId(index);
         items.put(item.getId(), item);
         increasedId();

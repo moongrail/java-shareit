@@ -3,10 +3,10 @@ package ru.practicum.shareit.user.storage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.dto.UserMapperDto;
 import ru.practicum.shareit.exceptions.UserNotFoundException;
 import ru.practicum.shareit.exceptions.UserUniqueEmailException;
+import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.dto.UserMapperDto;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.*;
@@ -26,11 +26,11 @@ public class UserStorageImpl implements UserStorage {
 
         checkEmailUnique(userDto);
 
-        users.put(userDto.getId(), UserMapperDto.fromUserDto(userDto.getId(), userDto));
+        users.put(userDto.getId(), UserMapperDto.fromUserDtoWithId(userDto.getId(), userDto));
         emails.add(userDto.getEmail());
         increasedId();
 
-        return Optional.of(UserMapperDto.fromUserDto(userDto.getId(), userDto));
+        return Optional.of(UserMapperDto.fromUserDtoWithId(userDto.getId(), userDto));
     }
 
     private static void increasedId() {

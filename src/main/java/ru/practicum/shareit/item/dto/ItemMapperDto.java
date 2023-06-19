@@ -1,6 +1,9 @@
 package ru.practicum.shareit.item.dto;
 
 import lombok.experimental.UtilityClass;
+import ru.practicum.shareit.booking.dto.BookingMapperDto;
+import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.comments.dto.CommentResponseDto;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
@@ -32,5 +35,20 @@ public class ItemMapperDto {
         return items.stream()
                 .map(ItemMapperDto::toItemDto)
                 .collect(Collectors.toList());
+    }
+
+    public static ItemResponseDto toItemResponseDto(Item item,
+                                                    Booking lastBooking,
+                                                    Booking nextBooking,
+                                                    List<CommentResponseDto> comments) {
+        return ItemResponseDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .available(item.isAvailable())
+                .description(item.getDescription())
+                .lastBooking(lastBooking == null ? null : BookingMapperDto.bookingItemResponseDto(lastBooking))
+                .nextBooking(nextBooking == null ? null : BookingMapperDto.bookingItemResponseDto(nextBooking))
+                .comments(comments)
+                .build();
     }
 }

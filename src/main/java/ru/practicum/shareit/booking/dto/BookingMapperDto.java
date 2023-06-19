@@ -35,4 +35,14 @@ public class BookingMapperDto {
                 .map(BookingMapperDto::toBookingDto)
                 .collect(Collectors.toList());
     }
+
+    public static BookingResponseDto bookingItemResponseDto(Booking booking) {
+        return BookingResponseDto.builder()
+                .id(booking.getId())
+                .status(booking.getStatus())
+                .start(booking.getStart())
+                .end(booking.getEnd())
+                .bookerId(booking.getBooker().getId())
+                .build();
+    }
 }

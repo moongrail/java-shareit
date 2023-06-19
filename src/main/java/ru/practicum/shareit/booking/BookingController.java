@@ -7,10 +7,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingCreateDto;
 import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.service.BookingService;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * TODO Sprint add-bookings.
@@ -24,9 +24,11 @@ public class BookingController {
     private final BookingService bookingService;
 
     @GetMapping("/{bookingId}")
-    public ResponseEntity<BookingDto> getBookingById(@PathVariable Long bookingId) {
-        BookingDto bookingDto = bookingService.getBookingById(bookingId);
-        return ResponseEntity.ok(bookingDto);
+    public ResponseEntity<BookingDto> getBookingById(@RequestHeader(name = HEADER_USER_ID) Long userId,
+                                                     @PathVariable Long bookingId) {
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(bookingService.getBookingByIdAndBooker(userId, bookingId));
     }
 
     @PostMapping()
@@ -50,15 +52,33 @@ public class BookingController {
                                                    @RequestHeader(name = HEADER_USER_ID) Long userId,
                                                    @RequestParam(name = "approved", required = false) Boolean approved) {
 
-        BookingDto updatedBookingDto = bookingService.patch(bookingId, userId, approved);
-
-        return ResponseEntity.ok(updatedBookingDto);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(bookingService.patch(bookingId, userId, approved));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteBookingById(@PathVariable Long id) {
-        bookingService.deleteBookingById(id);
-        return ResponseEntity.ok("Удален Booking с id " + id);
+    @DeleteMapping("/{bookingId}")
+    public ResponseEntity<String> deleteBookingById(@PathVariable Long bookingId) {
+        bookingService.deleteBookingById(bookingId);
+        return ResponseEntity.ok("Удален Booking с id " + bookingId);
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<BookingDto>> getUserBookings(@RequestHeader(name = HEADER_USER_ID) Long userId,
+                                                            @RequestParam(name = "state",
+                                                                    defaultValue = "ALL") String state) {
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(bookingService.getUserBookings(userId, state));
+    }
+
+    @GetMapping("/owner")
+    public ResponseEntity<List<BookingDto>> getOwnerBookings(@RequestHeader(name = HEADER_USER_ID) Long userId,
+                                                             @RequestParam(name = "state",
+                                                                     defaultValue = "ALL") String state) {
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(bookingService.getOwnerBookings(userId, state));
     }
 }
 

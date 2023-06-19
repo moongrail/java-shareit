@@ -53,7 +53,7 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler(BookingNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleBookingNotFoundException(BookingNotFoundException ex) {
         return new ErrorResponse(ex.getMessage());
     }
@@ -63,14 +63,22 @@ public class ErrorHandler {
     public ErrorResponse handleBookingTimestampException(BookingTimestampException ex) {
         return new ErrorResponse(ex.getMessage());
     }
+
     @ExceptionHandler(BookingAuthException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ErrorResponse handleBookingAuthException(BookingAuthException ex) {
         return new ErrorResponse(ex.getMessage());
     }
+
     @ExceptionHandler(BookingParameterException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleBookingParameterException(BookingParameterException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
+
+    @ExceptionHandler(BookingUnsupportedStateException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleBookingUnsupportedStateException(BookingUnsupportedStateException ex) {
         return new ErrorResponse(ex.getMessage());
     }
 }
