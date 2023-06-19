@@ -85,7 +85,7 @@ public class ItemStorageImpl implements ItemStorage {
 
         List<Item> foundItems = new ArrayList<>();
         for (Item item : items.values()) {
-            if (item.getOwner().equals(userId)) {
+            if (item.getOwner().getId().equals(userId)) {
                 foundItems.add(item);
             }
         }
