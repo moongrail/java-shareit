@@ -5,7 +5,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.comments.dto.CommentRequestDto;
+import ru.practicum.shareit.comments.dto.CommentResponseDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemResponseDto;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
@@ -19,17 +22,18 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping
-    public ResponseEntity<List<ItemDto>> getAllItems(@RequestHeader(value = HEADER_USER_ID) Long userId) {
+    public ResponseEntity<List<ItemResponseDto>> getAllItems(@RequestHeader(value = HEADER_USER_ID) Long userId) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(itemService.findAllItemByUserId(userId));
     }
 
     @GetMapping("/{itemId}")
-    public ResponseEntity<ItemDto> getItemById(@PathVariable Long itemId) {
+    public ResponseEntity<ItemResponseDto> getItemById(@RequestHeader(value = HEADER_USER_ID) Long userId,
+                                                       @PathVariable Long itemId) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(itemService.findById(itemId));
+                .body(itemService.findById(itemId, userId));
     }
 
     @PostMapping
@@ -68,5 +72,14 @@ public class ItemController {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(itemService.findByText(text));
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public ResponseEntity<CommentResponseDto> addComment(
+            @RequestHeader(value = HEADER_USER_ID) Long userId,
+            @PathVariable Long itemId,
+            @Valid @RequestBody CommentRequestDto commentRequestDto
+    ) {
+        return ResponseEntity.ok(itemService.addComment(userId, itemId, commentRequestDto));
     }
 }
