@@ -31,7 +31,7 @@ public class ItemRequestController {
 
     @GetMapping("/{requestId}")
     public ResponseEntity<ItemRequestDto> getItemRequest(@RequestHeader(value = HEADER_USER_ID) Long userId,
-                                                         Long requestId) {
+                                                         @PathVariable Long requestId) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(itemRequestService.getItemRequest(userId, requestId));
