@@ -3,12 +3,14 @@ package ru.practicum.shareit.request;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestPost;
 import ru.practicum.shareit.request.service.ItemRequestService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 /**
@@ -40,8 +42,10 @@ public class ItemRequestController {
 
     @GetMapping("/all")
     public ResponseEntity<List<ItemRequestDto>> getAllItemRequests(@RequestHeader(value = HEADER_USER_ID) Long userId,
-                                                                @RequestParam(name = "from",defaultValue = "0") Long from,
-                                                                @RequestParam(name = "size") Long size) {
+                                                                @RequestParam(name = "from", required = false)
+                                                                @PositiveOrZero Long from,
+                                                                @RequestParam(name = "size", required = false)
+                                                                       @PositiveOrZero Long size) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(itemRequestService.getAllItemRequests(userId, from, size));
@@ -50,7 +54,14 @@ public class ItemRequestController {
 
     @PostMapping()
     public ResponseEntity<ItemRequestDto> addItemRequest(@RequestHeader(value = HEADER_USER_ID) Long userId,
-                                                               @RequestBody @Valid ItemRequestPost itemRequestPost) {
+                                                         @RequestBody @Valid ItemRequestPost itemRequestPost,
+                                                         BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity
+                    .badRequest()
+                    .build();
+        }
+
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(itemRequestService.addItemRequest(userId, itemRequestPost));

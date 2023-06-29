@@ -3,6 +3,7 @@ package ru.practicum.shareit.request.dto;
 import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.request.model.ItemRequest;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,6 +14,20 @@ public class ItemRequestsDtoMapper {
                 .id(itemRequest.getId())
                 .description(itemRequest.getDescription())
                 .created(itemRequest.getCreated())
+                .build();
+    }
+    public static ItemRequest fromItemRequestDto(ItemRequestDto ItemRequestDto) {
+        return ItemRequest.builder()
+                .id(ItemRequestDto.getId())
+                .description(ItemRequestDto.getDescription())
+                .created(ItemRequestDto.getCreated())
+                .build();
+    }
+    public static ItemRequest fromItemRequestPost(Long userId,ItemRequestPost itemRequestPost) {
+        return ItemRequest.builder()
+                .description(itemRequestPost.getDescription())
+                .created(LocalDateTime.now())
+                .requestorId(userId)
                 .build();
     }
 

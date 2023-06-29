@@ -1,8 +1,10 @@
 package ru.practicum.shareit.request.dto;
 
 import lombok.*;
+import ru.practicum.shareit.item.dto.ItemDto;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -12,5 +14,6 @@ import java.sql.Timestamp;
 public class ItemRequestDto {
     private Long id;
     private String description;
-    private Timestamp created;
+    private LocalDateTime created;
+    private List<ItemDto> items;
 }

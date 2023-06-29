@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.shareit.booking.BookingController;
 import ru.practicum.shareit.exceptions.*;
 import ru.practicum.shareit.item.ItemController;
+import ru.practicum.shareit.request.ItemRequestController;
 import ru.practicum.shareit.user.UserController;
 
-@RestControllerAdvice(basePackageClasses = {UserController.class, ItemController.class, BookingController.class})
+@RestControllerAdvice(basePackageClasses = {UserController.class, ItemController.class, BookingController.class,
+        ItemRequestController.class})
 public class ErrorHandler {
 
     @ExceptionHandler(ItemNotFoundException.class)
@@ -55,6 +57,11 @@ public class ErrorHandler {
     @ExceptionHandler(BookingNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleBookingNotFoundException(BookingNotFoundException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
+    @ExceptionHandler(ItemRequestNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleItemRequestNotFoundException(ItemRequestNotFoundException ex) {
         return new ErrorResponse(ex.getMessage());
     }
 
