@@ -1,6 +1,7 @@
 package ru.practicum.shareit.request.dto;
 
 import lombok.experimental.UtilityClass;
+import org.springframework.data.domain.Page;
 import ru.practicum.shareit.request.model.ItemRequest;
 
 import java.time.LocalDateTime;
@@ -10,6 +11,13 @@ import java.util.stream.Collectors;
 @UtilityClass
 public class ItemRequestsDtoMapper {
     public static ItemRequestDto toItemDto(ItemRequest itemRequest) {
+        return ItemRequestDto.builder()
+                .id(itemRequest.getId())
+                .description(itemRequest.getDescription())
+                .created(itemRequest.getCreated())
+                .build();
+    }
+    public static ItemRequestDto toItemDtoFull(ItemRequest itemRequest) {
         return ItemRequestDto.builder()
                 .id(itemRequest.getId())
                 .description(itemRequest.getDescription())

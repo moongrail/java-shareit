@@ -22,10 +22,12 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping
-    public ResponseEntity<List<ItemResponseDto>> getAllItems(@RequestHeader(value = HEADER_USER_ID) Long userId) {
+    public ResponseEntity<List<ItemResponseDto>> getAllItems(@RequestHeader(value = HEADER_USER_ID) Long userId,
+                                                            @RequestParam(name = "from", required = false) Integer from,
+                                                            @RequestParam(name = "size", required = false) Integer size) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(itemService.findAllItemByUserId(userId));
+                .body(itemService.findAllItemByUserId(userId, from, size));
     }
 
     @GetMapping("/{itemId}")
@@ -38,6 +40,7 @@ public class ItemController {
 
     @PostMapping
     public ResponseEntity<ItemDto> addItem(@RequestHeader(value = HEADER_USER_ID) Long userId,
+                                           @RequestParam(name = "requestId", required = false) Long requestId,
                                            @RequestBody @Valid ItemDto itemDto,
                                            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -48,7 +51,7 @@ public class ItemController {
 
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(itemService.save(userId, itemDto));
+                .body(itemService.save(userId, itemDto, requestId));
     }
 
     @PatchMapping("/{itemId}")
@@ -68,10 +71,14 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<ItemDto>> searchItemsByText(@RequestParam String text) {
+    public ResponseEntity<List<ItemDto>> searchItemsByText(@RequestParam String text,
+                                                           @RequestParam(name = "from", required = false)
+                                                           Integer from,
+                                                           @RequestParam(name = "size", required = false)
+                                                           Integer size) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(itemService.findByText(text));
+                .body(itemService.findByText(text, from, size));
     }
 
     @PostMapping("/{itemId}/comment")

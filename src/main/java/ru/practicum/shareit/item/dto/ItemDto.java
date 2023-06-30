@@ -28,7 +28,7 @@ public class ItemDto {
     private Boolean available;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User owner;
-    private ItemRequest request;
+    private Long requestId;
     private BookingDtoUser lastBooking;
     private BookingDtoUser nextBooking;
     private List<CommentResponseDto> comments;

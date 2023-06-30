@@ -2,6 +2,8 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingCreateDto;
 import ru.practicum.shareit.booking.dto.BookingDto;
@@ -14,12 +16,15 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repositories.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repositories.UserRepository;
+import ru.practicum.shareit.util.PaginationUtil;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static ru.practicum.shareit.booking.dto.BookingMapperDto.*;
+import static ru.practicum.shareit.util.PaginationUtil.getPaginationWithoutSort;
 
 @Service
 @RequiredArgsConstructor
@@ -125,36 +130,37 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> getUserBookings(Long userId, String state) {
+    public List<BookingDto> getUserBookings(Long userId, String state, Integer from, Integer size) {
         checkUserExist(userId);
         checkValidState(state);
         BookingState bookingState = BookingState.valueOf(state.toUpperCase());
         LocalDateTime currentTime = LocalDateTime.now();
-        List<Booking> bookings;
+        Page<Booking> bookings;
+        Pageable paginationWithoutSort = getPaginationWithoutSort(from, size);
 
         switch (bookingState) {
             case CURRENT:
                 bookings = bookingRepository.findByBookerIdAndStartLessThanAndEndGreaterThanOrderByStartDesc(userId,
-                        currentTime, currentTime);
+                        currentTime, currentTime, paginationWithoutSort);
                 break;
             case PAST:
-                bookings = bookingRepository.findByBookerIdAndEndLessThanOrderByStartDesc(userId, currentTime);
+                bookings = bookingRepository.findByBookerIdAndEndLessThanOrderByStartDesc(userId, currentTime,paginationWithoutSort);
                 break;
             case FUTURE:
-                bookings = bookingRepository.findByBookerIdAndStartGreaterThanOrderByStartDesc(userId, currentTime);
+                bookings = bookingRepository.findByBookerIdAndStartGreaterThanOrderByStartDesc(userId, currentTime, paginationWithoutSort);
                 break;
             case WAITING:
-                bookings = bookingRepository.findByBookerIdAndStatusOrderByStartDesc(userId, BookingStatus.WAITING);
+                bookings = bookingRepository.findByBookerIdAndStatusOrderByStartDesc(userId, BookingStatus.WAITING,paginationWithoutSort);
                 break;
             case REJECTED:
-                bookings = bookingRepository.findByBookerIdAndStatusOrderByStartDesc(userId, BookingStatus.REJECTED);
+                bookings = bookingRepository.findByBookerIdAndStatusOrderByStartDesc(userId, BookingStatus.REJECTED,paginationWithoutSort);
                 break;
             default:
-                bookings = bookingRepository.findByBookerIdOrderByStartDesc(userId);
+                bookings = bookingRepository.findByBookerIdOrderByStartDesc(userId,paginationWithoutSort);
                 break;
         }
 
-        return toListBookingDto(bookings);
+        return toListBookingDto(bookings.stream().collect(Collectors.toList()));
     }
 
     private static void checkValidState(String state) {
@@ -172,34 +178,35 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> getOwnerBookings(Long userId, String state) {
+    public List<BookingDto> getOwnerBookings(Long userId, String state, Integer from, Integer size) {
         checkUserExist(userId);
         checkValidState(state);
         BookingState bookingState = BookingState.valueOf(state.toUpperCase());
-        List<Booking> bookings;
+        Page<Booking> bookings;
+        Pageable paginationWithoutSort = getPaginationWithoutSort(from, size);
         LocalDateTime currentTime = LocalDateTime.now();
 
         switch (bookingState) {
             case CURRENT:
-                bookings = bookingRepository.findByItemOwnerAndStartLessThanAndEndGreaterThanOrderByStartDesc(userId, currentTime, currentTime);
+                bookings = bookingRepository.findByItemOwnerAndStartLessThanAndEndGreaterThanOrderByStartDesc(userId, currentTime, currentTime, paginationWithoutSort);
                 break;
             case PAST:
-                bookings = bookingRepository.findByItemOwnerAndEndLessThanOrderByStartDesc(userId, currentTime);
+                bookings = bookingRepository.findByItemOwnerAndEndLessThanOrderByStartDesc(userId, currentTime, paginationWithoutSort);
                 break;
             case FUTURE:
-                bookings = bookingRepository.findByItemOwnerAndStartGreaterThanOrderByStartDesc(userId, currentTime);
+                bookings = bookingRepository.findByItemOwnerAndStartGreaterThanOrderByStartDesc(userId, currentTime, paginationWithoutSort);
                 break;
             case WAITING:
-                bookings = bookingRepository.findByItemOwnerAndStatusOrderByStartDesc(userId, BookingStatus.WAITING);
+                bookings = bookingRepository.findByItemOwnerAndStatusOrderByStartDesc(userId, BookingStatus.WAITING,paginationWithoutSort);
                 break;
             case REJECTED:
-                bookings = bookingRepository.findByItemOwnerAndStatusOrderByStartDesc(userId, BookingStatus.REJECTED);
+                bookings = bookingRepository.findByItemOwnerAndStatusOrderByStartDesc(userId, BookingStatus.REJECTED,paginationWithoutSort);
                 break;
             default:
-                bookings = bookingRepository.findByItemOwnerOrderByStartDesc(userId);
+                bookings = bookingRepository.findByItemOwnerOrderByStartDesc(userId, paginationWithoutSort);
                 break;
         }
 
-        return toListBookingDto(bookings);
+        return toListBookingDto(bookings.stream().collect(Collectors.toList()));
     }
 }

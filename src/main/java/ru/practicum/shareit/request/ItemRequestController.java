@@ -4,13 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestPost;
 import ru.practicum.shareit.request.service.ItemRequestService;
 
 import javax.validation.Valid;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 /**
@@ -24,36 +24,38 @@ public class ItemRequestController {
     private final ItemRequestService itemRequestService;
 
     @GetMapping()
-    public ResponseEntity<List<ItemRequestDto>> getItemRequests(@RequestHeader(value = HEADER_USER_ID) Long userId) {
+    public ResponseEntity<List<ItemRequestDto>> getItemRequests(@RequestHeader(value = HEADER_USER_ID) Long requesterId) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(itemRequestService.getItemRequests(userId));
+                .body(itemRequestService.getItemRequests(requesterId));
 
     }
 
     @GetMapping("/{requestId}")
-    public ResponseEntity<ItemRequestDto> getItemRequest(@RequestHeader(value = HEADER_USER_ID) Long userId,
+    public ResponseEntity<ItemRequestDto> getItemRequest(@RequestHeader(value = HEADER_USER_ID) Long requesterId,
                                                          @PathVariable Long requestId) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(itemRequestService.getItemRequest(userId, requestId));
+                .body(itemRequestService.getItemRequest(requesterId, requestId));
 
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<ItemRequestDto>> getAllItemRequests(@RequestHeader(value = HEADER_USER_ID) Long userId,
-                                                                @RequestParam(name = "from", required = false)
-                                                                @PositiveOrZero Long from,
-                                                                @RequestParam(name = "size", required = false)
-                                                                       @PositiveOrZero Long size) {
+    public ResponseEntity<List<ItemRequestDto>> getAllItemRequests(@RequestHeader(value = HEADER_USER_ID) Long requesterId,
+                                                                   @RequestParam(name = "from", required = false)
+                                                                   Integer from,
+                                                                   @RequestParam(name = "size", required = false)
+                                                                   Integer size) {
+
+
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(itemRequestService.getAllItemRequests(userId, from, size));
+                .body(itemRequestService.getAllItemRequests(requesterId, from, size));
 
     }
 
     @PostMapping()
-    public ResponseEntity<ItemRequestDto> addItemRequest(@RequestHeader(value = HEADER_USER_ID) Long userId,
+    public ResponseEntity<ItemRequestDto> addItemRequest(@RequestHeader(value = HEADER_USER_ID) Long requesterId,
                                                          @RequestBody @Valid ItemRequestPost itemRequestPost,
                                                          BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -64,6 +66,6 @@ public class ItemRequestController {
 
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(itemRequestService.addItemRequest(userId, itemRequestPost));
+                .body(itemRequestService.addItemRequest(requesterId, itemRequestPost));
     }
 }

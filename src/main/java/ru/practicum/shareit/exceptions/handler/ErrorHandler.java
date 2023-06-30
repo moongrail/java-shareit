@@ -70,6 +70,11 @@ public class ErrorHandler {
     public ErrorResponse handleBookingTimestampException(BookingTimestampException ex) {
         return new ErrorResponse(ex.getMessage());
     }
+    @ExceptionHandler(PaginationParameterException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handlePaginationParameterException(PaginationParameterException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
 
     @ExceptionHandler(BookingAuthException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
