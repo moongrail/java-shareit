@@ -2,8 +2,6 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -17,13 +15,11 @@ import ru.practicum.shareit.comments.model.Comment;
 import ru.practicum.shareit.comments.repositories.CommentRepository;
 import ru.practicum.shareit.exceptions.*;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemMapperDto;
 import ru.practicum.shareit.item.dto.ItemResponseDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repositories.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repositories.UserRepository;
-import ru.practicum.shareit.util.PaginationUtil;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -36,7 +32,7 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 import static ru.practicum.shareit.booking.dto.BookingMapperDto.bookingItemResponseDto;
 import static ru.practicum.shareit.comments.dto.CommentMapperDto.toListComment;
 import static ru.practicum.shareit.item.dto.ItemMapperDto.*;
-import static ru.practicum.shareit.util.PaginationUtil.*;
+import static ru.practicum.shareit.util.PaginationUtil.getPaginationWithoutSort;
 
 @Service
 @RequiredArgsConstructor
@@ -202,7 +198,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> findAllItemByRequest(Long requestId) {
-        return  toListItemDto(itemRepository.findAllByRequestId(requestId));
+        return toListItemDto(itemRepository.findAllByRequestId(requestId));
     }
 }
 

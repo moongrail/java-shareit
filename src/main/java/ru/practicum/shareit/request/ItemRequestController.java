@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestPost;
@@ -46,7 +45,6 @@ public class ItemRequestController {
                                                                    Integer from,
                                                                    @RequestParam(name = "size", required = false)
                                                                    Integer size) {
-
 
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)

@@ -59,6 +59,7 @@ public class ErrorHandler {
     public ErrorResponse handleBookingNotFoundException(BookingNotFoundException ex) {
         return new ErrorResponse(ex.getMessage());
     }
+
     @ExceptionHandler(ItemRequestNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleItemRequestNotFoundException(ItemRequestNotFoundException ex) {
@@ -70,6 +71,7 @@ public class ErrorHandler {
     public ErrorResponse handleBookingTimestampException(BookingTimestampException ex) {
         return new ErrorResponse(ex.getMessage());
     }
+
     @ExceptionHandler(PaginationParameterException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handlePaginationParameterException(PaginationParameterException ex) {

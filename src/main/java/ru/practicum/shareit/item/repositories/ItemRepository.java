@@ -37,8 +37,10 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "JOIN FETCH i.owner o " +
             "WHERE i.id = :itemId")
     Optional<Item> findByIdFull(Long itemId);
+
     List<Item> findAllByRequestId(Long requestId);
 
     List<Item> findAllByOwnerIdOrderByIdAsc(Long id);
+
     Page<Item> findAllByOwnerIdOrderByIdAsc(Long id, Pageable pageable);
 }

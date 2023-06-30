@@ -82,7 +82,7 @@ public class BookingController {
                                                                      defaultValue = "ALL") String state) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(bookingService.getOwnerBookings(userId, state , from, size));
+                .body(bookingService.getOwnerBookings(userId, state, from, size));
     }
 }
 

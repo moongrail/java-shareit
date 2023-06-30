@@ -2,12 +2,9 @@ package ru.practicum.shareit.request.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exceptions.ItemRequestNotFoundException;
-import ru.practicum.shareit.exceptions.PaginationParameterException;
 import ru.practicum.shareit.exceptions.UserNotFoundException;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
@@ -54,12 +51,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public List<ItemRequestDto> getAllItemRequests(Long requesterId, Integer from, Integer size) {
-//        checkPagination(from, size);
         checkUserExists(requesterId);
-//        Sort sortCreated = Sort.by("created").descending();
-//        Pageable pageable = from != null && size != null
-//                ? PageRequest.of(from / size, size, sortCreated)
-//                : PageRequest.of(0, Integer.MAX_VALUE, sortCreated);
         Pageable paginationWithSortDesc = PaginationUtil.getPaginationWithSortDesc(from, size);
         Page<ItemRequest> findItemRequests = itemRequestRepository.findAllByRequestorIdNot(requesterId,
                 paginationWithSortDesc);
@@ -81,15 +73,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     private void checkUserExists(Long requesterId) {
         if (!userRepository.existsById(requesterId)) {
             throw new UserNotFoundException("Пользователь не найден");
-        }
-    }
-
-    private void checkPagination(Integer from, Integer size) {
-        if (from == null || size == null) {
-            return;
-        }
-        if (from < 0 || size < 0) {
-            throw new PaginationParameterException("Неверные параметры пагинации.");
         }
     }
 }

@@ -16,7 +16,6 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repositories.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repositories.UserRepository;
-import ru.practicum.shareit.util.PaginationUtil;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -144,19 +143,19 @@ public class BookingServiceImpl implements BookingService {
                         currentTime, currentTime, paginationWithoutSort);
                 break;
             case PAST:
-                bookings = bookingRepository.findByBookerIdAndEndLessThanOrderByStartDesc(userId, currentTime,paginationWithoutSort);
+                bookings = bookingRepository.findByBookerIdAndEndLessThanOrderByStartDesc(userId, currentTime, paginationWithoutSort);
                 break;
             case FUTURE:
                 bookings = bookingRepository.findByBookerIdAndStartGreaterThanOrderByStartDesc(userId, currentTime, paginationWithoutSort);
                 break;
             case WAITING:
-                bookings = bookingRepository.findByBookerIdAndStatusOrderByStartDesc(userId, BookingStatus.WAITING,paginationWithoutSort);
+                bookings = bookingRepository.findByBookerIdAndStatusOrderByStartDesc(userId, BookingStatus.WAITING, paginationWithoutSort);
                 break;
             case REJECTED:
-                bookings = bookingRepository.findByBookerIdAndStatusOrderByStartDesc(userId, BookingStatus.REJECTED,paginationWithoutSort);
+                bookings = bookingRepository.findByBookerIdAndStatusOrderByStartDesc(userId, BookingStatus.REJECTED, paginationWithoutSort);
                 break;
             default:
-                bookings = bookingRepository.findByBookerIdOrderByStartDesc(userId,paginationWithoutSort);
+                bookings = bookingRepository.findByBookerIdOrderByStartDesc(userId, paginationWithoutSort);
                 break;
         }
 
@@ -197,10 +196,10 @@ public class BookingServiceImpl implements BookingService {
                 bookings = bookingRepository.findByItemOwnerAndStartGreaterThanOrderByStartDesc(userId, currentTime, paginationWithoutSort);
                 break;
             case WAITING:
-                bookings = bookingRepository.findByItemOwnerAndStatusOrderByStartDesc(userId, BookingStatus.WAITING,paginationWithoutSort);
+                bookings = bookingRepository.findByItemOwnerAndStatusOrderByStartDesc(userId, BookingStatus.WAITING, paginationWithoutSort);
                 break;
             case REJECTED:
-                bookings = bookingRepository.findByItemOwnerAndStatusOrderByStartDesc(userId, BookingStatus.REJECTED,paginationWithoutSort);
+                bookings = bookingRepository.findByItemOwnerAndStatusOrderByStartDesc(userId, BookingStatus.REJECTED, paginationWithoutSort);
                 break;
             default:
                 bookings = bookingRepository.findByItemOwnerOrderByStartDesc(userId, paginationWithoutSort);
