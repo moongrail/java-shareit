@@ -1,6 +1,7 @@
 package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -32,6 +33,7 @@ public class BookingController {
     }
 
     @PostMapping()
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<BookingDto> addBooking(@RequestHeader(name = HEADER_USER_ID) Long userId,
                                                  @RequestBody @Valid BookingCreateDto bookingCreateDto,
                                                  BindingResult bindingResult) {
@@ -42,7 +44,8 @@ public class BookingController {
                     .body(BookingDto.builder().build());
         }
 
-        return ResponseEntity.ok()
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(bookingService.create(userId, bookingCreateDto));
     }
