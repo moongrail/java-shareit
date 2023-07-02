@@ -1,6 +1,7 @@
 package ru.practicum.shareit.request;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -62,7 +63,8 @@ public class ItemRequestController {
                     .build();
         }
 
-        return ResponseEntity.ok()
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(itemRequestService.addItemRequest(requesterId, itemRequestPost));
     }

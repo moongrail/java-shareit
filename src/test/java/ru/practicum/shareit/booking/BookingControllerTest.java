@@ -23,12 +23,14 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -111,6 +113,7 @@ class BookingControllerTest {
                 .andDo(print())
                 .andReturn();
     }
+
     @Test
     @SneakyThrows
     void addBooking_whenInvokeWithoutStartEndDate_StatusBadRequest() {
@@ -147,7 +150,61 @@ class BookingControllerTest {
     }
 
     @Test
-    void patchBooking() {
+    @SneakyThrows
+    void patchBooking_whenInvokeFalse_ThenStatusOk() {
+        when(bookingService.patch(anyLong(), anyLong(), anyBoolean())).thenReturn(bookingDto);
+
+        mockMvc.perform(patch("/bookings/{bookingId}", 1L)
+                        .header(HEADER_USER_ID, 1L)
+                        .param("approved", "false")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(bookingDto)))
+                .andDo(print())
+                .andReturn();
+    }
+
+    @Test
+    @SneakyThrows
+    void patchBooking_whenInvokeTrue_ThenStatusOk() {
+        when(bookingService.patch(anyLong(), anyLong(), anyBoolean())).thenReturn(bookingDto);
+
+        mockMvc.perform(patch("/bookings/{bookingId}", 1L)
+                        .header(HEADER_USER_ID, 1L)
+                        .param("approved", "true")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(bookingDto)))
+                .andDo(print())
+                .andReturn();
+    }
+
+    @Test
+    @SneakyThrows
+    void patchBooking_whenInvokeWithBookingIdNotExist_ThenStatusBadRequest() {
+        when(bookingService.patch(anyLong(), anyLong(), anyBoolean())).thenThrow(BookingNotFoundException.class);
+
+        mockMvc.perform(patch("/bookings/{bookingId}", 999L)
+                        .header(HEADER_USER_ID, 1L)
+                        .param("approved", "true")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andDo(print())
+                .andReturn();
+    }
+
+    @Test
+    @SneakyThrows
+    void patchBooking_whenInvokeWithUserNotExist_ThenStatusNotFound() {
+        when(bookingService.patch(anyLong(), anyLong(), anyBoolean())).thenThrow(UserNotFoundException.class);
+
+        mockMvc.perform(patch("/bookings/{bookingId}", 1L)
+                        .header(HEADER_USER_ID, 0L)
+                        .param("approved", "true")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andDo(print())
+                .andReturn();
     }
 
     @Test
@@ -157,23 +214,136 @@ class BookingControllerTest {
                 .andExpect(status().is2xxSuccessful())
                 .andDo(print());
     }
+
     @Test
     @SneakyThrows
     void deleteBookingById_whenInvokeNotExistId_thenStatusNotFound() {
         doThrow(BookingNotFoundException.class).when(bookingService).deleteBookingById(0L);
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/bookings/{bookingId}", 0L))
-                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(status().isNotFound())
                 .andDo(print());
     }
 
     @Test
     @SneakyThrows
-    void getUserBookings() {
+    void getUserBookings_whenInvokedEmptyList_thenStatusOk() {
+        when(bookingService.getUserBookings(anyLong(), anyString(), anyInt(), anyInt())).thenReturn(List.of());
+        mockMvc.perform(get("/bookings")
+                        .header(HEADER_USER_ID, 1L)
+                        .param("from", "0")
+                        .param("size", "10")
+                        .param("state", "ALL")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"))
+                .andDo(print())
+                .andReturn();
+
     }
 
     @Test
-    void getOwnerBookings() {
+    @SneakyThrows
+    void getUserBookings_whenInvokedList1Booking_thenStatusOk() {
+        List<BookingDto> bookingDtoList = getBookingDtos();
+
+        when(bookingService.getUserBookings(anyLong(), anyString(), anyInt(), anyInt())).thenReturn(bookingDtoList);
+        mockMvc.perform(get("/bookings")
+                        .header(HEADER_USER_ID, 1L)
+                        .param("from", "0")
+                        .param("size", "10")
+                        .param("state", "ALL")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(bookingDtoList)))
+                .andDo(print())
+                .andReturn();
+
+    }
+
+    @Test
+    @SneakyThrows
+    void getUserBookings_whenInvokedNotExistUser_thenStatusNotFound() {
+        when(bookingService.getUserBookings(anyLong(), anyString(), anyInt(), anyInt())).thenThrow(UserNotFoundException.class);
+        mockMvc.perform(get("/bookings")
+                        .header(HEADER_USER_ID, 0L)
+                        .param("from", "0")
+                        .param("size", "10")
+                        .param("state", "ALL")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andDo(print())
+                .andReturn();
+    }
+
+    @Test
+    @SneakyThrows
+    void getOwnerBookings_whenInvoked1Booking_thenStatusOk() {
+        List<BookingDto> bookingDtoList = getBookingDtos();
+
+        when(bookingService.getOwnerBookings(anyLong(), anyString(), anyInt(), anyInt())).thenReturn(bookingDtoList);
+        mockMvc.perform(get("/bookings/owner")
+                        .header(HEADER_USER_ID, 1L)
+                        .param("from", "0")
+                        .param("size", "10")
+                        .param("state", "ALL")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(bookingDtoList)))
+                .andDo(print())
+                .andReturn();
+    }
+
+    @Test
+    @SneakyThrows
+    void getOwnerBookings_whenInvokedEmptyBooking_thenStatusOk() {
+
+        when(bookingService.getOwnerBookings(anyLong(), anyString(), anyInt(), anyInt())).thenReturn(List.of());
+        mockMvc.perform(get("/bookings/owner")
+                        .header(HEADER_USER_ID, 1L)
+                        .param("from", "0")
+                        .param("size", "10")
+                        .param("state", "ALL")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"))
+                .andDo(print())
+                .andReturn();
+    }
+
+    @Test
+    @SneakyThrows
+    void getOwnerBookings_whenInvokedEmptyList_thenStatusOk() {
+        when(bookingService.getOwnerBookings(anyLong(), anyString(), anyInt(), anyInt())).thenReturn(List.of());
+        mockMvc.perform(get("/bookings/owner")
+                        .header(HEADER_USER_ID, 1L)
+                        .param("from", "0")
+                        .param("size", "10")
+                        .param("state", "ALL")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"))
+                .andDo(print())
+                .andReturn();
+    }
+
+    @Test
+    @SneakyThrows
+    void getOwnerBookings_whenInvokedNotExistUser_thenStatusNotFound() {
+        when(bookingService.getOwnerBookings(anyLong(), anyString(), anyInt(), anyInt())).thenThrow(UserNotFoundException.class);
+        mockMvc.perform(get("/bookings/owner")
+                        .header(HEADER_USER_ID, 0L)
+                        .param("from", "0")
+                        .param("size", "10")
+                        .param("state", "ALL")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andDo(print())
+                .andReturn();
+    }
+
+    private List<BookingDto> getBookingDtos() {
+        return List.of(bookingDto);
     }
 
     private static BookingDto getTestBookingDto() {

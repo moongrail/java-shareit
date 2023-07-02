@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -49,7 +50,8 @@ public class ItemController {
                     .body(itemDto);
         }
 
-        return ResponseEntity.ok()
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(itemService.save(userId, itemDto, requestId));
     }
@@ -87,6 +89,8 @@ public class ItemController {
             @PathVariable Long itemId,
             @Valid @RequestBody CommentRequestDto commentRequestDto
     ) {
-        return ResponseEntity.ok(itemService.addComment(userId, itemId, commentRequestDto));
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(itemService.addComment(userId, itemId, commentRequestDto));
     }
 }

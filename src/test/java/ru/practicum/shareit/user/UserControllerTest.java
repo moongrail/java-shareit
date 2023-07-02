@@ -271,7 +271,7 @@ class UserControllerTest {
         doThrow(UserNotFoundException.class).when(userService).delete(0L);
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/users/{userId}", 0L))
-                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(status().isNotFound())
                 .andDo(print());
     }
 
