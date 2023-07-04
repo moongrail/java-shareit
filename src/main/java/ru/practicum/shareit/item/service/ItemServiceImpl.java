@@ -23,7 +23,6 @@ import ru.practicum.shareit.user.repositories.UserRepository;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
