@@ -6,8 +6,6 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,8 +15,7 @@ public class CommentMapperDto {
     public static CommentResponseDto toCommentResponseDto(Comment comment) {
         return CommentResponseDto.builder()
                 .id(comment.getId())
-                .created(LocalDateTime.ofInstant(LocalDateTime.now()
-                        .toInstant(ZoneOffset.UTC), ZoneId.systemDefault()))
+                .created(comment.getCreated())
                 .text(comment.getText())
                 .authorName(comment.getAuthor().getName())
                 .build();

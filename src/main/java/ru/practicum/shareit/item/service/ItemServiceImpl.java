@@ -23,8 +23,8 @@ import ru.practicum.shareit.user.repositories.UserRepository;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -189,7 +189,7 @@ public class ItemServiceImpl implements ItemService {
                 comment.setAuthor(user);
                 comment.setItem(item);
                 comment.setCreated(LocalDateTime.ofInstant(LocalDateTime.now()
-                        .toInstant(ZoneOffset.UTC), ZoneId.systemDefault()));
+                        .toInstant(OffsetDateTime.now().getOffset()), ZoneId.systemDefault()));
                 comment.setText(commentRequestDto.getText());
                 comment = commentRepository.save(comment);
                 return CommentMapperDto.toCommentResponseDto(comment);
