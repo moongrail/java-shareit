@@ -10,7 +10,7 @@ import ru.practicum.shareit.comments.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -42,7 +42,7 @@ class CommentRepositoryTest {
         Item itemPersist = entityManager.persist(item);
 
         Comment comment = Comment.builder()
-                .created(LocalDateTime.now())
+                .created(Instant.now())
                 .author(userPersist)
                 .item(itemPersist)
                 .text("text")

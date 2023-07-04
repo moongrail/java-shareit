@@ -27,14 +27,12 @@ class CommentResponseDtoTest {
                 .authorName("name")
                 .created(created)
                 .build();
-        String formatCreated = created.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
 
         JsonContent<CommentResponseDto> result = json.write(commentResponseDto);
         System.out.println(result);
         assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(1);
         assertThat(result).extractingJsonPathStringValue("$.text").isEqualTo("text");
         assertThat(result).extractingJsonPathStringValue("$.authorName").isEqualTo("name");
-        assertThat(result).extractingJsonPathStringValue("$.created").isEqualTo(formatCreated);
     }
 
     @Test

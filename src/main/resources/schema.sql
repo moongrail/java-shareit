@@ -46,5 +46,5 @@ CREATE TABLE IF NOT EXISTS comments
     text      VARCHAR                     NOT NULL,
     item_id   BIGINT REFERENCES items (id) ON DELETE CASCADE,
     author_id BIGINT REFERENCES users (id) ON DELETE CASCADE,
-    created   TIMESTAMP WITHOUT TIME ZONE NOT NULL
+    created   TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW() NOT NULL
 );

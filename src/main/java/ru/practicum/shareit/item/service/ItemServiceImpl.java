@@ -22,9 +22,8 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repositories.UserRepository;
 
 import javax.transaction.Transactional;
+import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +31,7 @@ import java.util.stream.Collectors;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
 import static ru.practicum.shareit.booking.dto.BookingMapperDto.bookingItemResponseDto;
+import static ru.practicum.shareit.comments.dto.CommentMapperDto.toCommentResponseDto;
 import static ru.practicum.shareit.comments.dto.CommentMapperDto.toListComment;
 import static ru.practicum.shareit.item.dto.ItemMapperDto.*;
 import static ru.practicum.shareit.util.PaginationUtil.getPaginationWithoutSort;
@@ -179,7 +179,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = itemRepository.findByIdFull(itemId)
                 .orElseThrow(() -> new ItemNotFoundException("Вещь не найдена"));
         List<Booking> bookings = bookingRepository.findByItem_IdAndBooker_IdOrderByStartDesc(itemId, userId);
-
+        Instant now = Instant.now();
         if (!bookings.isEmpty()) {
             if (bookings.stream().anyMatch(booking ->
                     (!BookingStatus.REJECTED.equals(booking.getStatus())
@@ -188,11 +188,10 @@ public class ItemServiceImpl implements ItemService {
                 Comment comment = new Comment();
                 comment.setAuthor(user);
                 comment.setItem(item);
-                comment.setCreated(LocalDateTime.ofInstant(LocalDateTime.now()
-                        .toInstant(OffsetDateTime.now().getOffset()), ZoneId.systemDefault()));
+                comment.setCreated(now);
                 comment.setText(commentRequestDto.getText());
                 comment = commentRepository.save(comment);
-                return CommentMapperDto.toCommentResponseDto(comment);
+                return toCommentResponseDto(comment);
             }
             throw new UserParameterException("Вещь не найдена у Юзера");
         } else {

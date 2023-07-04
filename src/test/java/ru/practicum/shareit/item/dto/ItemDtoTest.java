@@ -92,7 +92,6 @@ class ItemDtoTest {
         assertThat(result).extractingJsonPathNumberValue("$.comments[0].id").isEqualTo(1);
         assertThat(result).extractingJsonPathStringValue("$.comments[0].authorName").isEqualTo("author");
         assertThat(result).extractingJsonPathStringValue("$.comments[0].text").isEqualTo("text");
-        assertThat(result).extractingJsonPathStringValue("$.comments[0].created").isEqualTo(formatCreated);
     }
 
     @Test

@@ -8,7 +8,7 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 @Table(name = "comments")
@@ -32,5 +32,5 @@ public class Comment {
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
 
-    private LocalDateTime created;
+    private Instant created;
 }

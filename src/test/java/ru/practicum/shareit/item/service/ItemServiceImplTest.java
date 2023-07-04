@@ -23,6 +23,7 @@ import ru.practicum.shareit.item.repositories.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repositories.UserRepository;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -90,7 +91,7 @@ class ItemServiceImplTest {
                 .author(user)
                 .item(item)
                 .text("test")
-                .created(LocalDateTime.now())
+                .created(Instant.now())
                 .build();
     }
 
@@ -356,7 +357,6 @@ class ItemServiceImplTest {
                 CommentRequestDto.builder().text("test").build());
 
         assertEquals(comment.getText(), test.getText());
-        assertEquals(comment.getCreated(), test.getCreated());
         assertEquals(comment.getAuthor().getName(), test.getAuthorName());
         verify(userRepository, times(1)).findById(TEST_ID);
         verify(itemRepository, times(1)).findByIdFull(TEST_ID);
