@@ -32,6 +32,5 @@ public class Comment {
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
 
-    @Builder.Default
-    private LocalDateTime created = LocalDateTime.now();
+    private LocalDateTime created;
 }
