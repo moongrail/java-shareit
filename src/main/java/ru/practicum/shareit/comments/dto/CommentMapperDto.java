@@ -17,7 +17,7 @@ public class CommentMapperDto {
     public static CommentResponseDto toCommentResponseDto(Comment comment) {
         return CommentResponseDto.builder()
                 .id(comment.getId())
-                .created(LocalDateTime.ofInstant(comment.getCreated()
+                .created(LocalDateTime.ofInstant(LocalDateTime.now()
                         .toInstant(ZoneOffset.UTC), ZoneId.systemDefault()))
                 .text(comment.getText())
                 .authorName(comment.getAuthor().getName())
