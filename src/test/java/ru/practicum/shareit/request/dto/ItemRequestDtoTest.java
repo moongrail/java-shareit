@@ -41,7 +41,7 @@ class ItemRequestDtoTest {
                 .description("description")
                 .build();
 
-        String formatCreated = created.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS"));
+        String formatCreated = created.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
         JsonContent<ItemRequestDto> result = json.write(itemRequestDto);
         System.out.println(result);
         assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(1);
@@ -57,7 +57,7 @@ class ItemRequestDtoTest {
     @Test
     @SneakyThrows
     void testDeserialize() {
-        String jsonContent = "{\"id\":1,\"description\":\"description\",\"created\":\"2023-07-04T03:48:17.2417123\"," +
+        String jsonContent = "{\"id\":1,\"description\":\"description\",\"created\":\"2023-07-04T03:48:17\"," +
                 "\"items\":[{\"id\":1,\"name\":\"name\",\"description\":\"description\"," +
                 "\"available\":true,\"owner\":{\"id\":1,\"name\":\"name\",\"email\":\"email@mail.ru\"}," +
                 "\"requestId\":1,\"lastBooking\":null,\"nextBooking\":null,\"comments\":null}]}";
@@ -66,8 +66,8 @@ class ItemRequestDtoTest {
 
         assertThat("name").isEqualTo(object.getItems().get(0).getName());
         assertThat("description").isEqualTo(object.getDescription());
-        assertThat(LocalDateTime.parse("2023-07-04T03:48:17.2417123",
-                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS"))).isEqualTo(object.getCreated());
+        assertThat(LocalDateTime.parse("2023-07-04T03:48:17",
+                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"))).isEqualTo(object.getCreated());
         assertThat(1L).isEqualTo(object.getId());
         assertThat(1L).isEqualTo(object.getItems().get(0).getId());
         assertThat("name").isEqualTo(object.getItems().get(0).getName());
