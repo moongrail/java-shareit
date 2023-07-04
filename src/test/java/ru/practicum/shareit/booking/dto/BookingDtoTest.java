@@ -49,8 +49,8 @@ class BookingDtoTest {
                         .build())
                 .build();
 
-        String formatStart = start.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS"));
-        String formatEnd = end.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS"));
+        String formatStart = start.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+        String formatEnd = end.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
 
         JsonContent<BookingDto> result = json.write(bookingDto);
 
@@ -73,8 +73,8 @@ class BookingDtoTest {
     @Test
     @SneakyThrows
     void testDeserialize() {
-        String jsonContent = "{\"id\":1,\"start\":\"2023-07-04T00:40:59.295517100\"," +
-                "\"end\":\"2023-07-05T00:40:59.295517100\"," +
+        String jsonContent = "{\"id\":1,\"start\":\"2023-07-04T00:40:59\"," +
+                "\"end\":\"2023-07-05T00:40:59\"," +
                 "\"status\":\"WAITING\",\"item\":{\"id\":1,\"name\":\"name\",\"description\":\"description\"," +
                 "\"available\":true,\"requestId\":1}," +
                 "\"booker\":{\"id\":1,\"name\":\"name\",\"email\":\"email@mail.ru\"}}";
@@ -83,8 +83,8 @@ class BookingDtoTest {
 
         assertThat(bookingDto).isNotNull();
         assertThat(bookingDto.getId()).isEqualTo(1);
-        assertThat(bookingDto.getStart()).isEqualTo(LocalDateTime.parse("2023-07-04T00:40:59.295517100"));
-        assertThat(bookingDto.getEnd()).isEqualTo(LocalDateTime.parse("2023-07-05T00:40:59.295517100"));
+        assertThat(bookingDto.getStart()).isEqualTo(LocalDateTime.parse("2023-07-04T00:40:59"));
+        assertThat(bookingDto.getEnd()).isEqualTo(LocalDateTime.parse("2023-07-05T00:40:59"));
         assertThat(bookingDto.getStatus()).isEqualTo(BookingStatus.WAITING);
         assertThat(bookingDto.getItem()).isNotNull();
         assertThat(bookingDto.getItem().getId()).isEqualTo(1);

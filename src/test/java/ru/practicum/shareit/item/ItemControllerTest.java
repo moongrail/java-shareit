@@ -334,14 +334,14 @@ class ItemControllerTest {
 
     @Test
     @SneakyThrows
-    void addComment_whenInvokedCorrect_thenStatusCreated() {
+    void addComment_whenInvokedCorrect_thenStatusOk() {
         when(itemService.addComment(anyLong(), anyLong(), any())).thenReturn(commentResponseDto);
 
         mockMvc.perform(post("/items/{itemId}/comment", 1L)
                         .header(HEADER_USER_ID, 1L)
                         .content(objectMapper.writeValueAsString(commentRequestDto))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(commentResponseDto)))
                 .andDo(print())
                 .andReturn();

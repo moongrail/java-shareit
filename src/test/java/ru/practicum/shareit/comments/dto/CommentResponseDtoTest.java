@@ -27,7 +27,7 @@ class CommentResponseDtoTest {
                 .authorName("name")
                 .created(created)
                 .build();
-        String formatCreated = created.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS"));
+        String formatCreated = created.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
 
         JsonContent<CommentResponseDto> result = json.write(commentResponseDto);
         System.out.println(result);
@@ -40,14 +40,14 @@ class CommentResponseDtoTest {
     @Test
     @SneakyThrows
     void testDeserialize() {
-        String jsonContent = "{\"id\":1,\"text\":\"text\",\"authorName\":\"name\",\"created\":\"2023-07-04T03:38:40.8381027\"}";
+        String jsonContent = "{\"id\":1,\"text\":\"text\",\"authorName\":\"name\",\"created\":\"2023-07-04T03:38:40\"}";
         CommentResponseDto commentResponseDto = json.parse(jsonContent).getObject();
 
         assertThat(1L).isEqualTo(commentResponseDto.getId());
         assertThat("text").isEqualTo(commentResponseDto.getText());
         assertThat("name").isEqualTo(commentResponseDto.getAuthorName());
-        assertThat(LocalDateTime.parse("2023-07-04T03:38:40.8381027",
-                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS")))
+        assertThat(LocalDateTime.parse("2023-07-04T03:38:40",
+                DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")))
                 .isEqualTo(commentResponseDto.getCreated());
     }
 }

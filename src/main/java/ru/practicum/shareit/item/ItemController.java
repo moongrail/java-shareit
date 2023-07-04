@@ -90,7 +90,7 @@ public class ItemController {
             @Valid @RequestBody CommentRequestDto commentRequestDto
     ) {
         return ResponseEntity
-                .status(HttpStatus.CREATED)
+                .ok()
                 .body(itemService.addComment(userId, itemId, commentRequestDto));
     }
 }

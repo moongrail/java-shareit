@@ -29,8 +29,8 @@ class ItemDtoTest {
     void testSerialize() {
         LocalDateTime created = LocalDateTime.now();
         LocalDateTime end = LocalDateTime.now().plusHours(1);
-        String formatCreated = created.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS"));
-        String formatEnd = end.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS"));
+        String formatCreated = created.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+        String formatEnd = end.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
         ItemDto build = ItemDto.builder()
                 .owner(User.builder()
                         .id(1L)
@@ -100,17 +100,17 @@ class ItemDtoTest {
     void testDeserialize() {
         String jsonContent = "{\"id\":1,\"name\":\"name\",\"description\":\"description\",\"available\":true," +
                 "\"owner\":{\"id\":1,\"name\":\"name\",\"email\":\"email@mail.ru\"},\"requestId\":1," +
-                "\"lastBooking\":{\"id\":1,\"start\":\"2023-07-04T04:16:26.4073097\"," +
-                "\"end\":\"2023-07-04T05:16:26.4073097\",\"item\":{\"id\":null,\"name\":null," +
+                "\"lastBooking\":{\"id\":1,\"start\":\"2023-07-04T04:16:26\"," +
+                "\"end\":\"2023-07-04T05:16:26\",\"item\":{\"id\":null,\"name\":null," +
                 "\"description\":null,\"available\":null,\"owner\":null,\"requestId\":null,\"lastBooking\":null," +
                 "\"nextBooking\":null,\"comments\":null},\"booker\":{\"id\":1,\"name\":\"name\"," +
                 "\"email\":\"email@mail.ru\"},\"status\":\"WAITING\"},\"nextBooking\":{\"id\":1," +
-                "\"start\":\"2023-07-04T04:16:26.4073097\",\"end\":\"2023-07-04T05:16:26.4073097\"," +
+                "\"start\":\"2023-07-04T04:16:26\",\"end\":\"2023-07-04T05:16:26\"," +
                 "\"item\":{\"id\":null,\"name\":null,\"description\":null,\"available\":null,\"owner\":null," +
                 "\"requestId\":null,\"lastBooking\":null,\"nextBooking\":null,\"comments\":null}," +
                 "\"booker\":{\"id\":2,\"name\":\"name\",\"email\":\"email@mail.ru\"},\"status\":\"WAITING\"}," +
                 "\"comments\":[{\"id\":1,\"text\":\"text\",\"authorName\":\"author\"," +
-                "\"created\":\"2023-07-04T04:16:26.4073097\"}]}";
+                "\"created\":\"2023-07-04T04:16:26\"}]}";
 
         ItemDto itemDto = json.parse(jsonContent).getObject();
 
@@ -119,14 +119,14 @@ class ItemDtoTest {
         assertThat(itemDto.getDescription()).isEqualTo("description");
         assertThat(itemDto.getAvailable()).isTrue();
         assertThat(itemDto.getRequestId()).isEqualTo(1);
-        assertThat(itemDto.getLastBooking().getStart()).isEqualTo("2023-07-04T04:16:26.4073097");
-        assertThat(itemDto.getNextBooking().getStart()).isEqualTo("2023-07-04T04:16:26.4073097");
-        assertThat(itemDto.getLastBooking().getEnd()).isEqualTo("2023-07-04T05:16:26.4073097");
-        assertThat(itemDto.getNextBooking().getEnd()).isEqualTo("2023-07-04T05:16:26.4073097");
+        assertThat(itemDto.getLastBooking().getStart()).isEqualTo("2023-07-04T04:16:26");
+        assertThat(itemDto.getNextBooking().getStart()).isEqualTo("2023-07-04T04:16:26");
+        assertThat(itemDto.getLastBooking().getEnd()).isEqualTo("2023-07-04T05:16:26");
+        assertThat(itemDto.getNextBooking().getEnd()).isEqualTo("2023-07-04T05:16:26");
         assertThat(itemDto.getLastBooking().getStatus()).isEqualTo(BookingStatus.WAITING);
         assertThat(itemDto.getNextBooking().getStatus()).isEqualTo(BookingStatus.WAITING);
         assertThat(itemDto.getComments().get(0).getText()).isEqualTo("text");
         assertThat(itemDto.getComments().get(0).getAuthorName()).isEqualTo("author");
-        assertThat(itemDto.getComments().get(0).getCreated()).isEqualTo("2023-07-04T04:16:26.4073097");
+        assertThat(itemDto.getComments().get(0).getCreated()).isEqualTo("2023-07-04T04:16:26");
     }
 }
