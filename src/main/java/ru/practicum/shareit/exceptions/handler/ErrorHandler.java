@@ -78,12 +78,6 @@ public class ErrorHandler {
         return new ErrorResponse(ex.getMessage());
     }
 
-    @ExceptionHandler(BookingAuthException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ErrorResponse handleBookingAuthException(BookingAuthException ex) {
-        return new ErrorResponse(ex.getMessage());
-    }
-
     @ExceptionHandler(BookingParameterException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleBookingParameterException(BookingParameterException ex) {
