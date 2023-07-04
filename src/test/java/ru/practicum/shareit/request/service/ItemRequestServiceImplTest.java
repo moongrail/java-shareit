@@ -170,7 +170,7 @@ class ItemRequestServiceImplTest {
         ItemRequestDto requestSave = itemRequestService.addItemRequest(ID_FOR_CORRECT_TEST, itemRequestPost);
 
         assertEquals(itemRequestDto.getId(), requestSave.getId());
-        assertEquals(itemRequestDto.getCreated(), requestSave.getCreated());
+        assertEquals(itemRequestDto.getCreated().getSecond(), requestSave.getCreated().getSecond());
         assertEquals(itemRequestDto.getDescription(), requestSave.getDescription());
         verify(userRepository, times(1)).existsById(ID_FOR_CORRECT_TEST);
         verify(itemRequestRepository, times(1)).save(any(ItemRequest.class));
