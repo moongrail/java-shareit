@@ -121,11 +121,11 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public void deleteBookingById(Long id) {
-        if (bookingRepository.existsById(id)) {
-            bookingRepository.deleteById(id);
+        if (!bookingRepository.existsById(id)) {
+            throw new BookingNotFoundException("Брони не существует.");
         }
 
-        throw new BookingNotFoundException("Брони не существует.");
+        bookingRepository.deleteById(id);
     }
 
     @Override

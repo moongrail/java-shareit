@@ -38,7 +38,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class ItemControllerTest {
     private static final String HEADER_USER_ID = "X-Sharer-User-Id";
-
     @Autowired
     private MockMvc mockMvc;
     @MockBean
@@ -361,6 +360,7 @@ class ItemControllerTest {
                 .andDo(print())
                 .andReturn();
     }
+
     @Test
     @SneakyThrows
     void addComment_whenItemNotExist_thenStatusNotFound() {
@@ -374,6 +374,7 @@ class ItemControllerTest {
                 .andDo(print())
                 .andReturn();
     }
+
     @Test
     @SneakyThrows
     void addComment_whenEmptyComment_thenStatusBadRequest() {

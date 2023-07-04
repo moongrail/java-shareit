@@ -2,20 +2,15 @@ package ru.practicum.shareit.request.repositories;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.data.domain.Page;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.repositories.UserRepository;
 import ru.practicum.shareit.util.PaginationUtil;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +25,7 @@ class ItemRequestRepositoryTest {
     ItemRequestRepository itemRequestRepository;
     @Autowired
     TestEntityManager entityManager;
+
     @BeforeEach
     void setUp() {
         User owner = User.builder()
@@ -79,6 +75,7 @@ class ItemRequestRepositoryTest {
                 .findAllByRequestorIdOrderByCreatedDesc(1L);
         assertEquals(1, allByRequestorIdOrderByCreatedDesc.size());
     }
+
     @Test
     void findAllByRequestorIdOrderByCreatedDesc_whenInvoked_thenHaveEmptyList() {
         List<ItemRequest> allByRequestorIdOrderByCreatedDesc = itemRequestRepository

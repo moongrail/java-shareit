@@ -169,6 +169,7 @@ class UserServiceImplTest {
 
         assertEquals(1, userDtoList.size());
     }
+
     @Test
     void findAll_whenInvoked_thenListEmpty() {
         when(userRepository.findAll()).thenReturn(List.of());

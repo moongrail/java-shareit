@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +12,6 @@ import ru.practicum.shareit.exceptions.UserNotFoundException;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestPost;
-import ru.practicum.shareit.request.dto.ItemRequestsDtoMapper;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.request.repositories.ItemRequestRepository;
 import ru.practicum.shareit.user.repositories.UserRepository;
@@ -23,9 +21,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static ru.practicum.shareit.request.dto.ItemRequestsDtoMapper.*;
 
 @ExtendWith(MockitoExtension.class)
 class ItemRequestServiceImplTest {
@@ -41,7 +39,7 @@ class ItemRequestServiceImplTest {
     private ItemRequest itemRequest;
     private ItemRequestPost itemRequestPost;
 
-    private Pageable pageable = PaginationUtil.getPaginationWithSortDesc(0,2);
+    private Pageable pageable = PaginationUtil.getPaginationWithSortDesc(0, 2);
 
     @BeforeEach
     void setUp() {
@@ -56,7 +54,7 @@ class ItemRequestServiceImplTest {
                 .description("test")
                 .build();
 
-        itemRequest =  ItemRequest.builder()
+        itemRequest = ItemRequest.builder()
                 .id(ID_FOR_CORRECT_TEST)
                 .description("test")
                 .created(LocalDateTime.now())
