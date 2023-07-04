@@ -189,7 +189,7 @@ public class ItemServiceImpl implements ItemService {
                 comment.setAuthor(user);
                 comment.setItem(item);
                 comment.setCreated(LocalDateTime.ofInstant(LocalDateTime.now()
-                        .toInstant(ZoneOffset.UTC), ZoneId.systemDefault()));
+                        .toInstant(ZoneOffset.UTC), ZoneOffset.UTC));
                 comment.setText(commentRequestDto.getText());
                 comment = commentRepository.save(comment);
                 return CommentMapperDto.toCommentResponseDto(comment);
