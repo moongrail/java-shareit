@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +19,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/items")
 @RequiredArgsConstructor
+@PropertySource("classpath:headers.properties")
+@PropertySource("classpath:application.properties")
 public class ItemController {
-    private static final String HEADER_USER_ID = "X-Sharer-User-Id";
     private final ItemService itemService;
 
     @GetMapping
-    public ResponseEntity<List<ItemResponseDto>> getAllItems(@RequestHeader(value = HEADER_USER_ID) Long userId,
+    public ResponseEntity<List<ItemResponseDto>> getAllItems(@RequestHeader(name = "${headers.user.id.name}") Long userId,
                                                             @RequestParam(name = "from", required = false) Integer from,
                                                             @RequestParam(name = "size", required = false) Integer size) {
         return ResponseEntity.ok()
@@ -32,7 +34,7 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ResponseEntity<ItemResponseDto> getItemById(@RequestHeader(value = HEADER_USER_ID) Long userId,
+    public ResponseEntity<ItemResponseDto> getItemById(@RequestHeader(name = "${headers.user.id.name}") Long userId,
                                                        @PathVariable Long itemId) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -40,7 +42,7 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<ItemDto> addItem(@RequestHeader(value = HEADER_USER_ID) Long userId,
+    public ResponseEntity<ItemDto> addItem(@RequestHeader(name = "${headers.user.id.name}") Long userId,
                                            @RequestParam(name = "requestId", required = false) Long requestId,
                                            @RequestBody @Valid ItemDto itemDto,
                                            BindingResult bindingResult) {
@@ -57,7 +59,7 @@ public class ItemController {
     }
 
     @PatchMapping("/{itemId}")
-    public ResponseEntity<ItemDto> updateItem(@RequestHeader(value = HEADER_USER_ID) Long userId,
+    public ResponseEntity<ItemDto> updateItem(@RequestHeader(name = "${headers.user.id.name}") Long userId,
                                               @PathVariable Long itemId,
                                               @RequestBody ItemDto itemDto) {
 
@@ -85,7 +87,7 @@ public class ItemController {
 
     @PostMapping("/{itemId}/comment")
     public ResponseEntity<CommentResponseDto> addComment(
-            @RequestHeader(value = HEADER_USER_ID) Long userId,
+            @RequestHeader(name = "${headers.user.id.name}") Long userId,
             @PathVariable Long itemId,
             @Valid @RequestBody CommentRequestDto commentRequestDto
     ) {

@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "headers.user.id.name",
+      "type": "java.lang.String",
+      "description": "Description for headers.user.id.name."
+  }
+] }

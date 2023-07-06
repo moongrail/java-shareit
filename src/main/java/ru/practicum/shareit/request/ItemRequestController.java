@@ -1,6 +1,7 @@
 package ru.practicum.shareit.request;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +19,15 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(path = "/requests")
+@PropertySource("classpath:headers.properties")
+@PropertySource("classpath:application.properties")
 @RequiredArgsConstructor
 public class ItemRequestController {
-    private static final String HEADER_USER_ID = "X-Sharer-User-Id";
     private final ItemRequestService itemRequestService;
 
     @GetMapping()
-    public ResponseEntity<List<ItemRequestDto>> getItemRequests(@RequestHeader(value = HEADER_USER_ID) Long requesterId) {
+    public ResponseEntity<List<ItemRequestDto>> getItemRequests(@RequestHeader(name = "${headers.user.id.name}")
+                                                                    Long requesterId) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(itemRequestService.getItemRequests(requesterId));
@@ -32,7 +35,8 @@ public class ItemRequestController {
     }
 
     @GetMapping("/{requestId}")
-    public ResponseEntity<ItemRequestDto> getItemRequest(@RequestHeader(value = HEADER_USER_ID) Long requesterId,
+    public ResponseEntity<ItemRequestDto> getItemRequest(@RequestHeader(name = "${headers.user.id.name}")
+                                                             Long requesterId,
                                                          @PathVariable Long requestId) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -41,7 +45,8 @@ public class ItemRequestController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<ItemRequestDto>> getAllItemRequests(@RequestHeader(value = HEADER_USER_ID) Long requesterId,
+    public ResponseEntity<List<ItemRequestDto>> getAllItemRequests(@RequestHeader(name = "${headers.user.id.name}")
+                                                                       Long requesterId,
                                                                    @RequestParam(name = "from", required = false)
                                                                    Integer from,
                                                                    @RequestParam(name = "size", required = false)
@@ -54,7 +59,8 @@ public class ItemRequestController {
     }
 
     @PostMapping()
-    public ResponseEntity<ItemRequestDto> addItemRequest(@RequestHeader(value = HEADER_USER_ID) Long requesterId,
+    public ResponseEntity<ItemRequestDto> addItemRequest(@RequestHeader(name = "${headers.user.id.name}")
+                                                             Long requesterId,
                                                          @RequestBody @Valid ItemRequestPost itemRequestPost,
                                                          BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
