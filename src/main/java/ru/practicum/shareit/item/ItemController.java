@@ -1,6 +1,8 @@
 package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -17,19 +19,22 @@ import java.util.List;
 @RestController
 @RequestMapping("/items")
 @RequiredArgsConstructor
+@PropertySource("classpath:headers.properties")
+@PropertySource("classpath:application.properties")
 public class ItemController {
-    private static final String HEADER_USER_ID = "X-Sharer-User-Id";
     private final ItemService itemService;
 
     @GetMapping
-    public ResponseEntity<List<ItemResponseDto>> getAllItems(@RequestHeader(value = HEADER_USER_ID) Long userId) {
+    public ResponseEntity<List<ItemResponseDto>> getAllItems(@RequestHeader(name = "${headers.user.id.name}") Long userId,
+                                                            @RequestParam(name = "from", required = false) Integer from,
+                                                            @RequestParam(name = "size", required = false) Integer size) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(itemService.findAllItemByUserId(userId));
+                .body(itemService.findAllItemByUserId(userId, from, size));
     }
 
     @GetMapping("/{itemId}")
-    public ResponseEntity<ItemResponseDto> getItemById(@RequestHeader(value = HEADER_USER_ID) Long userId,
+    public ResponseEntity<ItemResponseDto> getItemById(@RequestHeader(name = "${headers.user.id.name}") Long userId,
                                                        @PathVariable Long itemId) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -37,7 +42,8 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<ItemDto> addItem(@RequestHeader(value = HEADER_USER_ID) Long userId,
+    public ResponseEntity<ItemDto> addItem(@RequestHeader(name = "${headers.user.id.name}") Long userId,
+                                           @RequestParam(name = "requestId", required = false) Long requestId,
                                            @RequestBody @Valid ItemDto itemDto,
                                            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -46,13 +52,14 @@ public class ItemController {
                     .body(itemDto);
         }
 
-        return ResponseEntity.ok()
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(itemService.save(userId, itemDto));
+                .body(itemService.save(userId, itemDto, requestId));
     }
 
     @PatchMapping("/{itemId}")
-    public ResponseEntity<ItemDto> updateItem(@RequestHeader(value = HEADER_USER_ID) Long userId,
+    public ResponseEntity<ItemDto> updateItem(@RequestHeader(name = "${headers.user.id.name}") Long userId,
                                               @PathVariable Long itemId,
                                               @RequestBody ItemDto itemDto) {
 
@@ -68,18 +75,24 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<ItemDto>> searchItemsByText(@RequestParam String text) {
+    public ResponseEntity<List<ItemDto>> searchItemsByText(@RequestParam String text,
+                                                           @RequestParam(name = "from", required = false)
+                                                           Integer from,
+                                                           @RequestParam(name = "size", required = false)
+                                                           Integer size) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(itemService.findByText(text));
+                .body(itemService.findByText(text, from, size));
     }
 
     @PostMapping("/{itemId}/comment")
     public ResponseEntity<CommentResponseDto> addComment(
-            @RequestHeader(value = HEADER_USER_ID) Long userId,
+            @RequestHeader(name = "${headers.user.id.name}") Long userId,
             @PathVariable Long itemId,
             @Valid @RequestBody CommentRequestDto commentRequestDto
     ) {
-        return ResponseEntity.ok(itemService.addComment(userId, itemId, commentRequestDto));
+        return ResponseEntity
+                .ok()
+                .body(itemService.addComment(userId, itemId, commentRequestDto));
     }
 }

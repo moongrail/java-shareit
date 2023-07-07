@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -34,13 +35,15 @@ public class UserController {
     }
 
     @PostMapping()
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<UserDto> createUser(@RequestBody @Valid UserDto userDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest()
                     .body(userDto);
         }
 
-        return ResponseEntity.ok()
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(userService.save(userDto));
     }

@@ -8,7 +8,9 @@ import ru.practicum.shareit.item.dto.ItemResponseDto;
 import java.util.List;
 
 public interface ItemService {
-    ItemDto save(Long userId, ItemDto itemDto);
+    ItemDto save(Long userId, ItemDto itemDto, Long requestId);
+
+    List<ItemDto> findAllItemByRequest(Long requestId);
 
     ItemDto patch(Long itemId, Long userId, ItemDto itemDto);
 
@@ -16,9 +18,9 @@ public interface ItemService {
 
     void delete(Long id);
 
-    List<ItemResponseDto> findAllItemByUserId(Long userId);
+    List<ItemResponseDto> findAllItemByUserId(Long userId, Integer from, Integer size);
 
-    List<ItemDto> findByText(String text);
+    List<ItemDto> findByText(String text, Integer from, Integer size);
 
     CommentResponseDto addComment(Long userId, Long itemId, CommentRequestDto commentRequestDto);
 }

@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 @NoArgsConstructor
+@ToString
 @AllArgsConstructor
 public class BookingCreateDto {
     @NotNull

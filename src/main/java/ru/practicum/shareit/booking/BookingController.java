@@ -1,6 +1,8 @@
 package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -18,13 +20,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/bookings")
 @RequiredArgsConstructor
+@PropertySource("classpath:headers.properties")
+@PropertySource("classpath:application.properties")
 public class BookingController {
-    private static final String HEADER_USER_ID = "X-Sharer-User-Id";
 
     private final BookingService bookingService;
 
     @GetMapping("/{bookingId}")
-    public ResponseEntity<BookingDto> getBookingById(@RequestHeader(name = HEADER_USER_ID) Long userId,
+    public ResponseEntity<BookingDto> getBookingById(@RequestHeader(name = "${headers.user.id.name}") Long userId,
                                                      @PathVariable Long bookingId) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -32,7 +35,8 @@ public class BookingController {
     }
 
     @PostMapping()
-    public ResponseEntity<BookingDto> addBooking(@RequestHeader(name = HEADER_USER_ID) Long userId,
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<BookingDto> addBooking(@RequestHeader(name = "${headers.user.id.name}") Long userId,
                                                  @RequestBody @Valid BookingCreateDto bookingCreateDto,
                                                  BindingResult bindingResult) {
 
@@ -42,14 +46,15 @@ public class BookingController {
                     .body(BookingDto.builder().build());
         }
 
-        return ResponseEntity.ok()
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(bookingService.create(userId, bookingCreateDto));
     }
 
     @PatchMapping("/{bookingId}")
     public ResponseEntity<BookingDto> patchBooking(@PathVariable Long bookingId,
-                                                   @RequestHeader(name = HEADER_USER_ID) Long userId,
+                                                   @RequestHeader(name = "${headers.user.id.name}") Long userId,
                                                    @RequestParam(name = "approved", required = false) Boolean approved) {
 
         return ResponseEntity.ok()
@@ -64,21 +69,25 @@ public class BookingController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<BookingDto>> getUserBookings(@RequestHeader(name = HEADER_USER_ID) Long userId,
+    public ResponseEntity<List<BookingDto>> getUserBookings(@RequestHeader(name = "${headers.user.id.name}") Long userId,
+                                                            @RequestParam(name = "from", required = false) Integer from,
+                                                            @RequestParam(name = "size", required = false) Integer size,
                                                             @RequestParam(name = "state",
                                                                     defaultValue = "ALL") String state) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(bookingService.getUserBookings(userId, state));
+                .body(bookingService.getUserBookings(userId, state, from, size));
     }
 
     @GetMapping("/owner")
-    public ResponseEntity<List<BookingDto>> getOwnerBookings(@RequestHeader(name = HEADER_USER_ID) Long userId,
+    public ResponseEntity<List<BookingDto>> getOwnerBookings(@RequestHeader(name = "${headers.user.id.name}") Long userId,
+                                                             @RequestParam(name = "from", required = false) Integer from,
+                                                             @RequestParam(name = "size", required = false) Integer size,
                                                              @RequestParam(name = "state",
                                                                      defaultValue = "ALL") String state) {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(bookingService.getOwnerBookings(userId, state));
+                .body(bookingService.getOwnerBookings(userId, state, from, size));
     }
 }
 
