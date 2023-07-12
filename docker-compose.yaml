@@ -2,7 +2,6 @@ version: '3.8'
 
 services:
   gateway:
-#    build: gateway
     image: moongrail/shareit-gateway:latest
     container_name: shareit-gateway
     ports:
@@ -13,7 +12,6 @@ services:
       - SHAREIT_SERVER_URL=http://server:9090
 
   server:
-#    build: server
     image: moongrail/shareit-server:latest
     container_name: shareit-server
     ports:
