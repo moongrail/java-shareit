@@ -48,7 +48,10 @@ public class BookingClient extends BaseClient {
 
 
     public ResponseEntity<Object> addBooking(Long userId, BookItemRequestDto requestDto) {
-        return post("", userId, requestDto);
+        Map<String, Object> parameters = Map.of(
+                "${headers.user.id.name}", userId
+        );
+        return post("", userId, parameters, requestDto);
     }
 
     public ResponseEntity<Object> getBookingById(Long userId, Long bookingId) {
