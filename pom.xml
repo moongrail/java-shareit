@@ -153,6 +153,7 @@
 						<output>file</output>
 						<excludes>
 							<exclude>**/gateway/**</exclude>
+							<exclude>**/shareit-gateway/**</exclude>
 						</excludes>
 					</configuration>
 					<executions>
