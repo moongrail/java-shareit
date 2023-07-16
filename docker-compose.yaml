@@ -19,11 +19,13 @@ services:
     ports:
       - "9090:9090"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
-      - SERVER_URL_DB=postgresql://db:5432/shareit
+      - URL_DB=postgresql://db:5432/shareit
       - SERVER_USERNAME_DB=postgres
       - SERVER_PASSWORD_DB=123
+    restart: always
 
   db:
     image: postgres_db
@@ -39,3 +41,9 @@ services:
       - POSTGRES_DB=shareit
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=123
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: always
