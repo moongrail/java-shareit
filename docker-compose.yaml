@@ -2,7 +2,8 @@ version: '3.8'
 
 services:
   gateway:
-    image: moongrail/shareit-gateway:latest
+    build: ./gateway
+    image: shareit-gateway-image
     container_name: shareit-gateway
     ports:
       - "8080:8080"
@@ -12,18 +13,23 @@ services:
       - SHAREIT_SERVER_URL=http://server:9090
 
   server:
-    image: moongrail/shareit-server:latest
+    build: ./server
+    image: shareit-server-image
     container_name: shareit-server
     ports:
       - "9090:9090"
     depends_on:
       - db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/shareit
-    restart: on-failure
+      - SERVER_URL_DB=postgresql://db:5432/shareit
+      - SERVER_USERNAME_DB=postgres
+      - SERVER_PASSWORD_DB=123
 
   db:
-    image: postgres:13.7-alpine
+    image: postgres_db
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.postgres
     volumes:
       - /var/lib/postgresql/data/
     container_name: shareit-db
