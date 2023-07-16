@@ -10,7 +10,8 @@ services:
     depends_on:
       - server
     environment:
-      - SHAREIT_SERVER_URL=http://server:9090
+      JAVA_TOOL_OPTIONS: "-javaagent:/path/to/jacocoagent.jar=destfile=/path/to/jacoco.exec,excludes=**/gateway/**"
+      SHAREIT_SERVER_URL: http://server:9090
 
   server:
     build: ./server
